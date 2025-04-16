@@ -1,0 +1,77 @@
+.register {
+    height: 100vh;
+    background-color: rgb(255, 202, 202);
+    // background-color: rgb(255, 217, 217);
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    .card {
+        display: flex;
+        width: 50%;
+        min-height: 550px;
+        border-radius: 10px;
+        overflow: hidden;
+        .left {
+            flex: 1;
+            background-color: white;
+            padding: 2rem;
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+            justify-content: center;
+            h1{
+                color: #555;
+            }
+            form{
+                display: flex;
+                flex-direction: column;
+                gap: 2rem;
+                input{
+                    border: none;
+                    border-bottom: 1px solid lightgray;
+                    padding: 10px 20px;
+                }
+                button{
+                    width: 50%;
+                    padding: 0.5rem;
+                    background-color: rgb(255, 155, 155);
+                    color: white;
+                    font-weight: bold;
+                    cursor: pointer;
+                    border: none;
+                }
+            }
+        }
+
+        .right {
+            flex: 1;
+            padding: 2rem;
+            background: linear-gradient(rgba(138, 17, 17, 0.6), rgba(98, 52, 52, 0.6)), url(https://img.freepik.com/free-photo/young-activists-taking-action_23-2149502784.jpg?t=st=1744769041~exp=1744772641~hmac=7d13b9d16dcddd4b3e74ca2dfa707c4ea6ebd80d224bd2a4512d36b017a0b949&w=740) center;
+            background-size: cover;
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+            color: white;
+            justify-content: center;
+            h1{
+                font-size: 6rem;
+                line-height: 6rem;
+            }
+            p{}
+            span{
+                font-size: 14px;
+            }
+            button{
+                width: 50%;
+                padding: 0.5rem;
+                border: none;
+                color: rgb(192, 70, 70);
+                font-weight: bold;
+                cursor: pointer;
+                background-color: white;
+            }
+        }
+
+    }
+}
