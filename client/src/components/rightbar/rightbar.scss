@@ -1,0 +1,87 @@
+.rightbar {
+    flex: 3;
+    position: sticky;
+    top: 8vh;
+    height: 92vh;
+    overflow: scroll;
+    scrollbar-width: none; // For Firefox
+
+    &::-webkit-scrollbar { // For Chrome
+        display: none;
+    }
+
+    .container {
+        
+        .item {
+            margin: 1rem;
+            box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.1),
+                        0px 2px 10px rgba(0, 0, 0, 0.1);
+            padding: 1rem 1.5rem;
+            border-radius: 0px;
+            
+            span {
+                color: gray;
+                font-size: 12px;
+            }
+
+            .entity {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                margin: 10px 0;
+
+
+                .entity-info {
+                    display: flex;
+                    align-items: center;
+                    gap: 0.75rem;
+
+                    img {
+                        max-width: 35px;
+                        max-height: 35px;
+                        border-radius: 50%;
+                        object-fit: cover;
+                        cursor: pointer;
+                    }
+
+                    span {
+                        font-size: 1rem;
+                        font-weight: 500;
+                        color: black;
+                        cursor: pointer;
+                    }
+                }
+
+                .buttons {
+                    display: flex;
+                    align-items: center;    
+                    gap: 0.5rem;
+
+                    button {
+                        padding: 5px 5px;
+                        border: none;
+                        color: white;
+                        cursor: pointer;
+                        font-weight: 500;
+                        border-radius: 5px;
+
+                        &:first-child {
+                            background-color: #5271ff;
+                        }
+
+                        &:last-child {
+                            background-color: lightgray;
+                            color: rgb(52, 52, 52);
+                        }
+                    }
+                }
+
+                .date {
+                    color: gray;
+                    font-size: 0.9rem;
+                }
+            }
+        }
+
+    }
+}

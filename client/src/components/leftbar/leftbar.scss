@@ -1,0 +1,72 @@
+.leftbar {
+    flex: 2;
+    position: sticky;
+    top: 8vh;
+    height: 92vh;
+    overflow: scroll;
+    scrollbar-width: none; // For Firefox
+
+    &::-webkit-scrollbar { // For Chrome
+        display: none;
+    }
+
+    .container {
+        display: flex;
+        flex-direction: column;
+        padding: 1.5rem;
+
+        hr {
+            margin: 20px 0;
+            border: none;
+            height: 1px;
+            background-color: lightgray;
+            width: 100%;
+        }
+        
+        .menu {
+            // width: 200px;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+
+            .explore-btn {
+                width: 100%;
+            }
+
+            span {
+                font-size: small;
+            }
+
+            .user {
+                display: flex;
+                align-items: center;
+                gap: 9px;
+
+                img {
+                    max-width: 35px;
+                    max-height: 35px;
+                    border-radius: 50%;
+                    object-fit: cover;
+                }
+
+                span {
+                    font-size: 1rem;
+                }
+
+            }
+
+            .item {
+                display: flex;
+                align-items: center;
+                gap: 1rem;
+                margin-left: 0.35rem;
+                cursor: pointer;
+
+                span {
+                    font-size: 1rem;
+                }
+            }
+        }
+
+    }
+}

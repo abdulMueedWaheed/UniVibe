@@ -1,0 +1,60 @@
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 8vh;
+    padding: 10px 20px;
+    border-bottom: 1px solid lightgray;
+    position: sticky;
+    top: 0;
+    background-color: white;
+    z-index: 999;
+    
+    .left {
+        gap: 1.5rem;
+        display: flex;
+        align-items: center;
+
+        span {
+            font-size: larger;
+            font-weight: bold;
+            color: #f77a13;
+        }   
+
+        .search {
+            display: flex;
+            align-items: center;
+            border: 1px solid lightgray;
+            border-radius: 5px;
+            padding: 5px;
+
+            input {
+                padding-left: 5px;
+                border: none;
+                width: 500px;
+                outline: none;
+            }
+            
+        }
+    }
+
+    .right {
+        display: flex;
+        gap: 1.5rem;
+        align-items: center;
+
+        .user {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-weight: 500;
+
+            img {
+                max-height: 40px;
+                max-width: 40px;
+                border-radius: 50%;
+                object-fit: cov er;
+            }
+        }
+    }
+}
