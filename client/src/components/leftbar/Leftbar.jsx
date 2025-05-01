@@ -1,4 +1,3 @@
-import React from 'react'
 import './leftbar.scss'
 import Button from '@mui/material/Button';
 import Explore from '@mui/icons-material/ExploreOutlined';
@@ -12,17 +11,15 @@ import InsertPhotoOutlinedIcon from '@mui/icons-material/InsertPhotoOutlined';
 import OndemandVideoOutlinedIcon from '@mui/icons-material/OndemandVideoOutlined';
 import ChatBubbleOutlineOutlinedIcon from '@mui/icons-material/ChatBubbleOutlineOutlined';
 import QuestionMarkOutlinedIcon from '@mui/icons-material/QuestionMarkOutlined';
+import { AuthContext } from '../../context/AuthContext';
 
 const Leftbar = () => {
+
   return (
     <div className='leftbar'>
       <div className="container">
         <div className="menu">
-          {/* <div className="user">
-            <img src="https://static.vecteezy.com/system/resources/thumbnails/009/734/564/small_2x/default-avatar-profile-icon-of-social-media-user-vector.jpg" alt="" />
-            <span>John Doe</span>
-          </div> */}
-          <div className="explore-btn">
+        <div className="explore-btn">
             <Button variant='contained' sx={{backgroundColor:"#f77a13"}} endIcon={<Explore/>}>
               Explore
             </Button>
@@ -79,18 +76,7 @@ const Leftbar = () => {
             <QuestionMarkOutlinedIcon/>
             <span>Tutorials</span>
           </div>
-          <div className="item">
-            <QuestionMarkOutlinedIcon/>
-            <span>Courses</span>
-          </div>
-          <div className="item">
-            <QuestionMarkOutlinedIcon/>
-            <span>Courses</span>
-          </div>
-          <div className="item">
-            <QuestionMarkOutlinedIcon/>
-            <span>Courses</span>
-          </div>
+          
         </div>
       </div>
     </div>

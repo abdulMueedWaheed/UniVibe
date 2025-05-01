@@ -8,8 +8,14 @@ import NotificationsOutlinedIcon from '@mui/icons-material/NotificationsOutlined
 import EmailOutlinedIcon from '@mui/icons-material/EmailOutlined';
 import PersonOutlinedIcon from '@mui/icons-material/PersonOutlined';
 import SearchOulintedIcon from '@mui/icons-material/SearchOutlined';
+import { DarkModeContext } from '../../context/DarkModeContext';
+import { useContext } from 'react';
+import { AuthContext } from '../../context/AuthContext';
 
 const Navbar = () => {
+  const {darkMode, toggle} = useContext(DarkModeContext);
+  const {currentUser} = useContext(AuthContext);
+
   return (
     <div className='navbar'>
       <div className="left">
@@ -17,8 +23,7 @@ const Navbar = () => {
           <span className="logo">UniVibe</span>
         </Link>
         <HomeOutlinedIcon sx={{ cursor: 'pointer' }}/> 
-        <DarkModeOutlinedIcon sx={{ cursor: 'pointer' }}/>
-        <LightModeOutlinedIcon sx={{ cursor: 'pointer' }}/>
+        {(darkMode === false)? <DarkModeOutlinedIcon onClick={toggle} sx={{ cursor: 'pointer' }} /> :<LightModeOutlinedIcon sx={{ cursor: 'pointer' }} onClick={toggle}/>}
         <GridViewOutlinedIcon sx={{ cursor: 'pointer' }}/>
         <div className="search">
           <SearchOulintedIcon/>
@@ -30,8 +35,8 @@ const Navbar = () => {
         <EmailOutlinedIcon sx={{ cursor: 'pointer' }}/>
         <NotificationsOutlinedIcon sx={{ cursor: 'pointer' }}/>
         <div className="user">
-          <img src="https://static.vecteezy.com/system/resources/thumbnails/009/734/564/small_2x/default-avatar-profile-icon-of-social-media-user-vector.jpg" alt="Profile Pic" />
-          <span>John Doe</span>
+          <img src={currentUser.profilePic} alt="Profile Pic" />
+          <span>{currentUser.name}</span>
         </div>
       </div>
     </div>
