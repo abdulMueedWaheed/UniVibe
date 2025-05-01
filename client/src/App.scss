@@ -1,3 +1,4 @@
+@use "sass:map";
 $themes: (
   light: (
     logo: #f77a13,
@@ -17,25 +18,16 @@ $themes: (
   ),
 );
 
-@mixin themify($themes) {
-  @each $theme, $map in $themes {
-    .#{$theme}-theme & {
-      $theme-map: () !global;
-      @each $key, $submap in $map {
-        $value: map-get(map-get($themes, $theme), "#{$key}");
-        $theme-map: map-merge(
-          $theme-map,
-          (
-            $key: $value,
-          )
-        ) !global;
-      }
-      @content;
-      $theme-map: null !global;
+
+// Generate CSS variables per theme
+@each $theme-name, $theme-map in $themes {
+  .#{$theme-name}-theme {
+    @each $key, $value in $theme-map {
+      --#{$key}: #{$value};
     }
   }
 }
 
 @function themed($key) {
-  @return map-get($theme-map, $key);
+  @return var(--#{$key});
 }

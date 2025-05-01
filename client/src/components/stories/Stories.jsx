@@ -39,12 +39,16 @@ const Stories = () => {
       name: "NSAC",
       img: "https://i.pinimg.com/736x/64/e8/00/64e80093aa9e4e2bc3ff5aba88bc22f4.jpg"
     },
-    // {
-    //   id: 6,
-    //   name: "NSAC",
-    //   img: "https://i.pinimg.com/736x/64/e8/00/64e80093aa9e4e2bc3ff5aba88bc22f4.jpg"
-    // },
-    
+    {
+      id: 6,
+      name: "NSAC",
+      img: "https://i.pinimg.com/736x/64/e8/00/64e80093aa9e4e2bc3ff5aba88bc22f4.jpg"
+    },
+    {
+      id: 7,
+      name: "NSAC",
+      img: "https://i.pinimg.com/736x/64/e8/00/64e80093aa9e4e2bc3ff5aba88bc22f4.jpg"
+    },
   ];
 
   return (

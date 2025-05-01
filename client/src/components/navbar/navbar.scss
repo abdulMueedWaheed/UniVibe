@@ -1,7 +1,6 @@
-@import "../../App.scss";
+@use "../../App.scss" as *;
 
 .navbar {
-  @include themify($themes) {
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -61,6 +60,5 @@
           object-fit: cov er;
         }
       }
-    }
   }
 }

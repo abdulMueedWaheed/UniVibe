@@ -1,7 +1,6 @@
-@import "../../App.scss";
+@use "../../App.scss" as *;
 
 .post {
-  @include themify($themes) {
     .container {
         padding: 26px;
         background-color: themed("bg");
@@ -57,6 +56,5 @@
       }
 
       // Interaction {}
-    }
   }
 }

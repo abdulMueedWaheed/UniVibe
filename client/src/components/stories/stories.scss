@@ -3,10 +3,19 @@
     gap: 1rem;
     margin-bottom: 2rem;
     height: 100px;
-    overflow: scroll;
+    width: 740px;
+    padding: 0 10px;
+    overflow-x: auto;
+    border-radius: 20px;
+
+    scrollbar-width: none; // For Firefox
+    &::-webkit-scrollbar {
+      // For Chrome
+      display: none;
+    }
 
     .story {
-        // flex: 1;
+        flex: 0 0 auto;
         border-radius: 10px;
         overflow: hidden;
         position: relative;

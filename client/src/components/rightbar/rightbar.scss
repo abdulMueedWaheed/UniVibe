@@ -1,7 +1,6 @@
-@import "../../App.scss";
+@use "../../App.scss" as *;
 
 .rightbar {
-  @include themify($themes) {
     flex: 3;
     position: sticky;
     top: 8vh;
@@ -91,4 +90,3 @@
       }
     }
   }
-}
