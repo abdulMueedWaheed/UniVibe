@@ -1,0 +1,288 @@
+CREATE TABLE users (
+    user_id SERIAL PRIMARY KEY,
+    email VARCHAR(255) UNIQUE NOT NULL,
+    password_hash VARCHAR(255) NOT NULL,
+    first_name VARCHAR(100) NOT NULL,
+    last_name VARCHAR(100) NOT NULL,
+    avatar_url VARCHAR(255),
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    last_login TIMESTAMP WITH TIME ZONE,
+    is_active BOOLEAN DEFAULT TRUE
+);
+
+CREATE TABLE organizations (
+    org_id SERIAL PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,
+    slug VARCHAR(100) UNIQUE NOT NULL,
+    description TEXT,
+    logo_url VARCHAR(255),
+    website_url VARCHAR(255),
+    industry VARCHAR(100),
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    is_public BOOLEAN DEFAULT FALSE
+);
+
+CREATE TABLE organization_members (
+    member_id SERIAL PRIMARY KEY,
+    org_id INTEGER REFERENCES organizations(org_id) ON DELETE CASCADE,
+    user_id INTEGER REFERENCES users(user_id) ON DELETE CASCADE,
+    role VARCHAR(50) NOT NULL CHECK (role IN ('owner', 'admin', 'manager', 'member')),
+    joined_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    UNIQUE(org_id, user_id)
+);
+
+CREATE INDEX idx_organization_members_org ON organization_members(org_id);
+CREATE INDEX idx_organization_members_user ON organization_members(user_id);
+
+CREATE TABLE departments (
+    dept_id SERIAL PRIMARY KEY,
+    org_id INTEGER REFERENCES organizations(org_id) ON DELETE CASCADE,
+    name VARCHAR(255) NOT NULL,
+    description TEXT,
+    slug VARCHAR(100) NOT NULL,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    UNIQUE(org_id, slug)
+);
+
+CREATE INDEX idx_departments_org ON departments(org_id);
+
+CREATE TABLE department_members (
+    id SERIAL PRIMARY KEY,
+    dept_id INTEGER REFERENCES departments(dept_id) ON DELETE CASCADE,
+    member_id INTEGER REFERENCES organization_members(member_id) ON DELETE CASCADE,
+    role VARCHAR(50) CHECK (role IN ('head', 'member')),
+    added_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    UNIQUE(dept_id, member_id)
+);
+
+CREATE TABLE posts (
+    post_id SERIAL PRIMARY KEY,
+    org_id INTEGER REFERENCES organizations(org_id) ON DELETE CASCADE,
+    author_id INTEGER REFERENCES organization_members(member_id) ON DELETE SET NULL,
+    dept_id INTEGER REFERENCES departments(dept_id) ON DELETE SET NULL,
+    title VARCHAR(255) NOT NULL,
+    content TEXT NOT NULL,
+    status VARCHAR(20) DEFAULT 'draft' CHECK (status IN ('draft', 'published', 'archived')),
+    published_at TIMESTAMP WITH TIME ZONE,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    slug VARCHAR(255) UNIQUE
+);
+
+CREATE INDEX idx_posts_org ON posts(org_id);
+CREATE INDEX idx_posts_dept ON posts(dept_id);
+CREATE INDEX idx_posts_status ON posts(status);
+
+CREATE TABLE media (
+    media_id SERIAL PRIMARY KEY,
+    org_id INTEGER REFERENCES organizations(org_id) ON DELETE CASCADE,
+    uploader_id INTEGER REFERENCES organization_members(member_id) ON DELETE SET NULL,
+    url VARCHAR(512) NOT NULL,
+    file_name VARCHAR(255) NOT NULL,
+    file_type VARCHAR(50) NOT NULL,
+    file_size INTEGER,
+    duration INTEGER, -- For videos (in seconds)
+    thumbnail_url VARCHAR(512),
+    is_public BOOLEAN DEFAULT FALSE,
+    uploaded_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE INDEX idx_media_org ON media(org_id);
+
+CREATE TABLE post_media (
+    post_id INTEGER REFERENCES posts(post_id) ON DELETE CASCADE,
+    media_id INTEGER REFERENCES media(media_id) ON DELETE CASCADE,
+    PRIMARY KEY (post_id, media_id)
+);
+
+CREATE TABLE events (
+    event_id SERIAL PRIMARY KEY,
+    org_id INTEGER REFERENCES organizations(org_id) ON DELETE CASCADE,
+    creator_id INTEGER REFERENCES organization_members(member_id) ON DELETE SET NULL,
+    dept_id INTEGER REFERENCES departments(dept_id) ON DELETE SET NULL,
+    title VARCHAR(255) NOT NULL,
+    description TEXT,
+    location VARCHAR(255),
+    start_time TIMESTAMP WITH TIME ZONE NOT NULL,
+    end_time TIMESTAMP WITH TIME ZONE NOT NULL,
+    is_online BOOLEAN DEFAULT FALSE,
+    registration_url VARCHAR(255),
+    cover_image_url VARCHAR(255),
+    status VARCHAR(20) DEFAULT 'upcoming' CHECK (status IN ('upcoming', 'ongoing', 'completed', 'cancelled')),
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE INDEX idx_events_org ON events(org_id);
+CREATE INDEX idx_events_time ON events(start_time, end_time);
+
+CREATE TABLE products (
+    product_id SERIAL PRIMARY KEY,
+    org_id INTEGER REFERENCES organizations(org_id) ON DELETE CASCADE,
+    name VARCHAR(255) NOT NULL,
+    description TEXT,
+    price DECIMAL(10,2),
+    currency VARCHAR(3) DEFAULT 'USD',
+    is_available BOOLEAN DEFAULT TRUE,
+    featured_image_url VARCHAR(255),
+    external_url VARCHAR(255),
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE INDEX idx_products_org ON products(org_id);
+
+CREATE TABLE post_engagement (
+    engagement_id SERIAL PRIMARY KEY,
+    post_id INTEGER REFERENCES posts(post_id) ON DELETE CASCADE,
+    user_id INTEGER REFERENCES users(user_id) ON DELETE SET NULL,
+    engagement_type VARCHAR(20) NOT NULL CHECK (engagement_type IN ('view', 'like', 'share', 'comment')),
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE INDEX idx_post_engagement_post ON post_engagement(post_id);
+CREATE INDEX idx_post_engagement_user ON post_engagement(user_id);
+
+CREATE TABLE event_registrations (
+    registration_id SERIAL PRIMARY KEY,
+    event_id INTEGER REFERENCES events(event_id) ON DELETE CASCADE,
+    user_id INTEGER REFERENCES users(user_id) ON DELETE CASCADE,
+    registration_time TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    status VARCHAR(20) DEFAULT 'registered' CHECK (status IN ('registered', 'attended', 'cancelled')),
+    UNIQUE(event_id, user_id)
+);
+
+CREATE INDEX idx_event_registrations_event ON event_registrations(event_id);
+
+CREATE TABLE notifications (
+    notification_id SERIAL PRIMARY KEY,
+    user_id INTEGER REFERENCES users(user_id) ON DELETE CASCADE,
+    content TEXT NOT NULL,
+    is_read BOOLEAN DEFAULT FALSE,
+    notification_type VARCHAR(50) NOT NULL,
+    reference_id INTEGER, -- Could be post_id, event_id etc.
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE INDEX idx_notifications_user ON notifications(user_id);
+
+CREATE TABLE comments (
+    comment_id SERIAL PRIMARY KEY,
+    post_id INTEGER REFERENCES posts(post_id) ON DELETE CASCADE,
+    user_id INTEGER REFERENCES users(user_id) ON DELETE CASCADE,
+    content TEXT NOT NULL,
+    parent_comment_id INTEGER REFERENCES comments(comment_id) ON DELETE CASCADE,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE INDEX idx_comments_post ON comments(post_id);
+CREATE INDEX idx_comments_user ON comments(user_id);
+
+CREATE TABLE conversations (
+    conversation_id SERIAL PRIMARY KEY,
+    type VARCHAR(20) NOT NULL CHECK (type IN ('dm', 'group')),
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    last_message_id INTEGER -- Will reference messages(message_id) after that table exists
+);
+
+CREATE INDEX idx_conversations_updated ON conversations(updated_at);
+
+CREATE TABLE direct_messages (
+    conversation_id INTEGER PRIMARY KEY REFERENCES conversations(conversation_id) ON DELETE CASCADE,
+    user1_id INTEGER REFERENCES users(user_id) ON DELETE CASCADE,
+    user2_id INTEGER REFERENCES users(user_id) ON DELETE CASCADE,
+    UNIQUE(user1_id, user2_id),
+    CHECK (user1_id < user2_id) -- Prevents duplicate pairs in different orders
+);
+
+CREATE INDEX idx_dm_user1 ON direct_messages(user1_id);
+CREATE INDEX idx_dm_user2 ON direct_messages(user2_id);
+
+CREATE TABLE group_chats (
+    conversation_id INTEGER PRIMARY KEY REFERENCES conversations(conversation_id) ON DELETE CASCADE,
+    org_id INTEGER REFERENCES organizations(org_id) ON DELETE CASCADE,
+    name VARCHAR(100),
+    description TEXT,
+    avatar_url VARCHAR(255),
+    created_by INTEGER REFERENCES users(user_id) ON DELETE SET NULL,
+    is_department_group BOOLEAN DEFAULT FALSE,
+    dept_id INTEGER REFERENCES departments(dept_id) ON DELETE SET NULL
+);
+
+CREATE INDEX idx_group_chats_org ON group_chats(org_id);
+
+CREATE TABLE group_members (
+    group_member_id SERIAL PRIMARY KEY,
+    conversation_id INTEGER REFERENCES group_chats(conversation_id) ON DELETE CASCADE,
+    user_id INTEGER REFERENCES users(user_id) ON DELETE CASCADE,
+    joined_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    role VARCHAR(20) DEFAULT 'member' CHECK (role IN ('admin', 'member')),
+    UNIQUE(conversation_id, user_id)
+);
+
+CREATE INDEX idx_group_members_conversation ON group_members(conversation_id);
+CREATE INDEX idx_group_members_user ON group_members(user_id);
+
+CREATE TABLE messages (
+    message_id SERIAL PRIMARY KEY,
+    conversation_id INTEGER REFERENCES conversations(conversation_id) ON DELETE CASCADE,
+    sender_id INTEGER REFERENCES users(user_id) ON DELETE SET NULL,
+    content TEXT,
+    sent_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    edited_at TIMESTAMP WITH TIME ZONE,
+    reply_to_id INTEGER REFERENCES messages(message_id) ON DELETE SET NULL,
+    deleted BOOLEAN DEFAULT FALSE
+);
+
+CREATE INDEX idx_messages_conversation ON messages(conversation_id);
+CREATE INDEX idx_messages_sender ON messages(sender_id);
+CREATE INDEX idx_messages_sent ON messages(sent_at);
+
+CREATE TABLE message_attachments (
+    attachment_id SERIAL PRIMARY KEY,
+    message_id INTEGER REFERENCES messages(message_id) ON DELETE CASCADE,
+    media_id INTEGER REFERENCES media(media_id) ON DELETE SET NULL,
+    file_url VARCHAR(512),
+    file_name VARCHAR(255),
+    file_type VARCHAR(50),
+    file_size INTEGER,
+    thumbnail_url VARCHAR(512)
+);
+
+CREATE INDEX idx_message_attachments_message ON message_attachments(message_id);
+
+CREATE TABLE message_reads (
+    read_id SERIAL PRIMARY KEY,
+    message_id INTEGER REFERENCES messages(message_id) ON DELETE CASCADE,
+    user_id INTEGER REFERENCES users(user_id) ON DELETE CASCADE,
+    read_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    UNIQUE(message_id, user_id)
+);
+
+CREATE INDEX idx_message_reads_user ON message_reads(user_id);
+
+CREATE TABLE department_channels (
+    channel_id SERIAL PRIMARY KEY,
+    dept_id INTEGER REFERENCES departments(dept_id) ON DELETE CASCADE,
+    name VARCHAR(100) NOT NULL,
+    description TEXT,
+    is_private BOOLEAN DEFAULT FALSE,
+    created_by INTEGER REFERENCES users(user_id) ON DELETE SET NULL,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE INDEX idx_department_channels_dept ON department_channels(dept_id);
+
+CREATE TABLE channel_members (
+    channel_member_id SERIAL PRIMARY KEY,
+    channel_id INTEGER REFERENCES department_channels(channel_id) ON DELETE CASCADE,
+    user_id INTEGER REFERENCES users(user_id) ON DELETE CASCADE,
+    joined_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    UNIQUE(channel_id, user_id)
+);
+
+CREATE INDEX idx_channel_members_channel ON channel_members(channel_id);
+
