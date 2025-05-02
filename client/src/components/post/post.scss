@@ -55,6 +55,22 @@
         }
       }
 
-      // Interaction {}
+      .interaction {
+        display: flex;
+        align-items: center;
+        gap: 1.5rem;
+
+          .item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+            
+            span {
+              font-size: 14px;
+            }
+          }
+
+      }
   }
 }

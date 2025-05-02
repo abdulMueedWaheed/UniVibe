@@ -7,8 +7,12 @@ import FavoriteBorderOutlinedIcon from '@mui/icons-material/FavoriteBorderOutlin
 import FavoriteOutlinedIcon from '@mui/icons-material/FavoriteOutlined';
 import VolunteerActivismOutlinedIcon from '@mui/icons-material/VolunteerActivismOutlined';
 import VolunteerActivismRoundedIcon from '@mui/icons-material/VolunteerActivismRounded';
+import Comments from "../comments/Comments";
+import { useState } from "react";
 
 const Post = ({ post }) => {
+  const [commentsOpen, setCommentsOpen] = useState(false);
+
   // TEMPORARY
   const liked = true;
 
@@ -35,8 +39,26 @@ const Post = ({ post }) => {
         </div>
 
         <div className="interaction">
-          {liked? <FavoriteOutlinedIcon/> : <FavoriteBorderOutlinedIcon/>}
+          <div className="item">
+            {liked? <FavoriteOutlinedIcon/> : <FavoriteBorderOutlinedIcon/>}
+            <span>
+              12 Likes
+            </span>
+          </div>
+          <div className="item" onClick={()=>setCommentsOpen(!commentsOpen)}>
+            <ChatBubbleOutlineOutlinedIcon/>
+            <span>
+              12 Comments
+            </span>
+          </div>
+          <div className="item">
+            <ShareIcon/>
+            <span>
+              Share
+            </span>
+          </div>
         </div>
+        {commentsOpen && <Comments/>}
       </div>
     </div>
   )

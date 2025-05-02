@@ -1,0 +1,61 @@
+@use "../../App.scss" as *;
+
+.comments {
+
+    .write-comment {
+        display: flex;
+        gap: 20px;
+        align-items: center;
+        justify-content: space-between;
+        margin: 30px 0;
+
+        input {
+            width: 100%;
+            padding: 10px;
+            border-radius: 10px;
+            border: 1px solid themed("border");
+            background-color: transparent;
+            color: themed("textColor");
+        }
+    }
+
+    img {
+        height: 35px;
+        width: 35px;
+        border-radius: 50%;
+        object-fit: cover;
+    }
+
+    .comment {
+        margin: 30px 0;
+        display: flex;
+        gap: 20px;
+        justify-content: space-between; 
+        
+
+        .info {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            align-items: flex-start;
+
+            span {
+                font-weight: 500;
+            }
+
+            p {
+                color: themed("textColorSoft");
+            }
+
+        
+        }
+        .date {
+            margin-left: auto;
+            align-self: center;
+            justify-self:end;
+            color: themed("textColorSoft");
+            font-size: small;
+            font-weight: 300;
+        }
+    }
+}
