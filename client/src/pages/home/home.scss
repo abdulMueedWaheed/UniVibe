@@ -1,7 +1,17 @@
-@use "../../App.scss";
+@use "../../App.scss" as *;
+
 
 .home {
-        background-color: App.themed('bgSoft');
-        // color: themed('textColor');
-        padding: 20px 20px 20px 40px;
+  background-color: themed('bgSoft');
+  // color: themed('textColor');
+  padding: 20px 20px 20px 40px;
+
+  @include mobile {
+    padding: 10px;
+  }
+
+  @include tablet {
+    padding: 20px;
+    width: 60vh;
+  }
 }

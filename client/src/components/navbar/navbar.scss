@@ -38,6 +38,14 @@
           outline: none;
           background-color: transparent;
           color: themed("textColor");
+
+          @include mobile{
+            display: none;
+          }
+
+          @include tablet {
+            width: 200px;
+          }
         }
       }
     }
@@ -47,11 +55,19 @@
       gap: 1.5rem;
       align-items: center;
 
+      @include mobile {
+        display: none;
+      }
+
       .user {
         display: flex;
         align-items: center;
         gap: 0.5rem;
         font-weight: 500;
+
+        @include tablet {
+          display: none;
+        }
 
         img {
           max-height: 35px;

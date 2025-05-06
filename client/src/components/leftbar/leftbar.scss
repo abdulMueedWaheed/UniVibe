@@ -10,6 +10,14 @@
     background-color: themed("bg");
     scrollbar-width: none; // For Firefox
 
+    @include mobile {
+      display: none;
+    }
+
+    @include tablet {
+      width: 200px;
+    }
+
     &::-webkit-scrollbar {
       // For Chrome
       display: none;

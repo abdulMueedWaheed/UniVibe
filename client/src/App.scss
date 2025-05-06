@@ -31,3 +31,23 @@ $themes: (
 @function themed($key) {
   @return var(--#{$key});
 }
+
+@mixin mobile {
+  @media (max-width: 480px) {
+    @content;
+  }
+}
+
+@mixin tablet {
+  @media (max-width: 960px) {
+    @content;
+  }
+}
+
+@mixin themify($themes) {
+  @each $theme-name, $theme-map in $themes {
+    .#{$theme-name}-theme & {
+      @content;
+    }
+  }
+}
