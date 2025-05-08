@@ -1,0 +1,21 @@
+{
+  "name": "univibe",
+  "version": "1.0.0",
+  "description": "*This Project is under development right now...*\r ### Technologies Used\r - React Js\r - Express Js\r - Node Js\r - Supabase (Database)\r ### Description\r This project proposes the development of UniVibe — a dynamic web application designed to bridge the communication gap between university societies and students.\r For societies, UniVibe will serve as a centralized platform to:\r - promote events,\r - post event details, and\r - share media such as videos and photos.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Abdulla-asim/UniVibe.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/Abdulla-asim/UniVibe/issues"
+  },
+  "homepage": "https://github.com/Abdulla-asim/UniVibe#readme"
+}
