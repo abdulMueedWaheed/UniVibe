@@ -1,3 +1,5 @@
+@use "../../App.scss" as *;
+
 .stories {
     display: flex;
     gap: 1rem;
@@ -14,6 +16,16 @@
       display: none;
     }
 
+    @include mobile {
+        height: 50px;
+        justify-content: space-around;
+    }
+
+    @include tablet {
+        gap: 20px;
+        width: 60vh;
+    }
+
     .story {
         flex: 0 0 auto;
         border-radius: 10px;
@@ -24,6 +36,13 @@
         // background-color: #f77a13;
         
         // border-radius: 50%;
+
+        @include mobile {
+            flex: none;
+            height: 50px;
+            width: 50px;
+            border-radius: 50%;
+        }
         
         img {
             border-radius: 50%;
@@ -41,6 +60,10 @@
             // color: white;
             font-weight: 500;
             overflow: hidden;
+
+            @include mobile {
+                display: none;
+            }
         }
 
         #add-story-btn {
@@ -58,6 +81,14 @@
             background-color: #f77a13;
             border: none;
             cursor: pointer;
+
+            @include mobile {
+                margin: auto;
+                left: 0;
+                right: 0;
+                top: 0;
+                bottom: 0;
+            }
         } 
     }
 }
