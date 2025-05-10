@@ -1,5 +1,13 @@
+@use "../../App.scss" as *;
+
 .posts {
     display: flex;
     flex-direction: column;
     gap: 3rem;
+    // width: 50vw;
+
+
+    @include mobile {
+        width: 90%;
+    }
 }

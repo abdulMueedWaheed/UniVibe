@@ -12,6 +12,13 @@
   background-color: themed("bg");
   z-index: 999;
   color: themed("textColor");
+  width: 100vw;
+  
+
+  @include mobile {
+    width: 100%;
+    box-sizing: border-box;
+  }
 
   .left {
     gap: 1.5rem;
