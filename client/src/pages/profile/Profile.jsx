@@ -27,43 +27,45 @@ const Profile = () => {
       </div>
       <div className="profileContainer">
         <div className="uInfo">
-          <div className="left">
-            <a href="http://facebook.com">
-              <FacebookTwoToneIcon fontSize="large" />
-            </a>
-            <a href="http://facebook.com">
-              <InstagramIcon fontSize="large" />
-            </a>
-            <a href="http://facebook.com">
-              <TwitterIcon fontSize="large" />
-            </a>
-            <a href="http://facebook.com">
-              <LinkedInIcon fontSize="large" />
-            </a>
-            <a href="http://facebook.com">
-              <PinterestIcon fontSize="large" />
-            </a>
-          </div>
-          <div className="center">
-            <span>Jane Doe</span>
-            <div className="info">
-              <div className="item">
-                <PlaceIcon />
-                <span>USA</span>
-              </div>
-              <div className="item">
-                <LanguageIcon />
-                <span>lama.dev</span>
-              </div>
+          <span>Nust Stray Animals Society</span>
+          <div className="bottom">
+            <div className="left">
+              <a href="http://facebook.com">
+                <FacebookTwoToneIcon />
+              </a>
+              <a href="http://facebook.com">
+                <InstagramIcon style={{fontSize:"30px"}}  />
+              </a>
+              <a href="http://facebook.com">
+                <TwitterIcon style={{fontSize:"30px"}} />
+              </a>
+              <a href="http://facebook.com">
+                <LinkedInIcon style={{fontSize:"30px"}} />
+              </a>
+              <a href="http://facebook.com">
+                <PinterestIcon style={{fontSize:"30px"}} />
+              </a>
             </div>
-            <button>follow</button>
-          </div>
-          <div className="right">
-            <EmailOutlinedIcon />
-            <MoreVertIcon />
+            <div className="center">
+              <div className="info">
+                <div className="item">
+                  <PlaceIcon />
+                  <span>USA</span>
+                </div>
+                <div className="item">
+                  <LanguageIcon />
+                  <span>lama.dev</span>
+                </div>
+              </div>
+              <button>follow</button>
+            </div>
+            <div className="right">
+              <EmailOutlinedIcon />
+              <MoreVertIcon />
+            </div>
           </div>
         </div>
-      <Posts/>
+        {/* <Posts/> */}
       </div>
     </div>
   );

@@ -34,10 +34,24 @@
         padding: 1rem 1.5rem;
         border-radius: 20px;
 
-        span {
-          color: themed('textColorSoft');
-          font-size: 12px;
+        .header {
+          display: flex;
+          justify-content: space-between;
+          span {
+            color: themed('textColorSoft');
+            font-size: 15px;
+            margin-bottom: 10px;
+          }
+
+          a {
+            text-underline-offset: 3px;
+            text-decoration-color: themed("border");
+            span {
+              font-size: 13px;
+            }
+          }
         }
+
 
         .entity {
           display: flex;
@@ -50,19 +64,25 @@
             align-items: center;
             gap: 10px;
 
-            img {
-              max-width: 35px;
-              max-height: 35px;
-              border-radius: 50%;
-              object-fit: cover;
-              cursor: pointer;
-            }
-
-            span {
-              font-size: 1rem;
-              font-weight: 500;
-              color: themed("textColor");
-              cursor: pointer;
+            a {
+              gap: 0.5rem;
+              text-decoration: none;
+              display: flex;
+              align-items: center;
+              img {
+                max-width: 35px;
+                max-height: 35px;
+                border-radius: 50%;
+                object-fit: cover;
+                cursor: pointer;
+              }
+  
+              span {
+                font-size: 1rem;
+                font-weight: 500;
+                color: themed("textColor");
+                cursor: pointer;
+              }
             }
           }
 

@@ -12,6 +12,7 @@ import OndemandVideoOutlinedIcon from '@mui/icons-material/OndemandVideoOutlined
 import ChatBubbleOutlineOutlinedIcon from '@mui/icons-material/ChatBubbleOutlineOutlined';
 import QuestionMarkOutlinedIcon from '@mui/icons-material/QuestionMarkOutlined';
 import { AuthContext } from '../../context/AuthContext';
+import { Link } from 'react-router-dom';
 
 const Leftbar = () => {
 
@@ -19,64 +20,86 @@ const Leftbar = () => {
     <div className='leftbar'>
       <div className="container">
         <div className="menu">
-        <div className="explore-btn">
-            <Button variant='contained' sx={{backgroundColor:"#f77a13"}} endIcon={<Explore/>}>
+          <div className="explore-btn">
+            <Button variant='contained' sx={{ backgroundColor: "#f77a13" }} endIcon={<Explore />}>
               Explore
             </Button>
           </div>
           <div className="item">
-            <EmojiPeopleOutlinedIcon/>
+          <Link>
+            <EmojiPeopleOutlinedIcon />
             <span>Friends</span>
+          </Link>
           </div>
           <div className="item">
-            <Groups2OutlinedIcon/>
+          <Link>
+            <Groups2OutlinedIcon />
             <span>Groups</span>
+          </Link>
           </div>
           <div className="item">
-            <Diversity2OutlinedIcon/>
+          <Link>
+            <Diversity2OutlinedIcon />
             <span>Societies</span>
+          </Link>
           </div>
           <div className="item">
-            <PlayCircleOutlinedIcon/>
+          <Link>
+            <PlayCircleOutlinedIcon />
             <span>Watch</span>
+          </Link>
           </div>
           <hr />
         </div>
         <div className="menu">
           <span>Shortcuts</span>
           <div className="item">
-            <EventIcon/>
-            <span>Events</span>
+            <Link to="/events">
+              <EventIcon />
+              <span>Events</span>
+            </Link>
           </div>
           <div className="item">
-            <GamesOutlinedIcon/>
+            <Link>
+            <GamesOutlinedIcon />
             <span>Gaming</span>
+            </Link>
           </div>
           <div className="item">
-            <InsertPhotoOutlinedIcon/>
+          <Link>
+            <InsertPhotoOutlinedIcon />
             <span>Gallery</span>
+          </Link>
           </div>
           <div className="item">
-            <OndemandVideoOutlinedIcon/>
+          <Link>
+            <OndemandVideoOutlinedIcon />
             <span>Videos</span>
+          </Link>
           </div>
           <div className="item">
-            <ChatBubbleOutlineOutlinedIcon/>
+          <Link>
+            <ChatBubbleOutlineOutlinedIcon />
             <span>Messages</span>
+          </Link>
           </div>
           <hr />
         </div>
         <div className="menu">
           <span>Others</span>
           <div className="item">
-            <QuestionMarkOutlinedIcon/>
+          <Link>
+            <QuestionMarkOutlinedIcon />
             <span>Fundraiser</span>
+          </Link>
           </div>
           <div className="item">
-            <QuestionMarkOutlinedIcon/>
+          <Link>
+            <QuestionMarkOutlinedIcon />
             <span>Tutorials</span>
+          </Link>
           </div>
-          
+
         </div>
       </div>
     </div>

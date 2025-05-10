@@ -68,14 +68,19 @@
         }
 
         .item {
-          display: flex;
-          align-items: center;
-          gap: 1rem;
-          margin-left: 0.35rem;
-          cursor: pointer;
 
-          span {
-            font-size: 1rem;
+          a {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-left: 0.35rem;
+            cursor: pointer;
+            text-decoration: none;
+            color: themed(y);
+
+            span {
+              font-size: 1rem;
+            }
           }
         }
       }
