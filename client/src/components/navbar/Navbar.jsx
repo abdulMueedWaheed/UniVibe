@@ -11,6 +11,7 @@ import SearchOulintedIcon from '@mui/icons-material/SearchOutlined';
 import { DarkModeContext } from '../../context/DarkModeContext';
 import { useContext } from 'react';
 import { AuthContext } from '../../context/AuthContext';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
 const Navbar = () => {
   const {darkMode, toggle} = useContext(DarkModeContext);
