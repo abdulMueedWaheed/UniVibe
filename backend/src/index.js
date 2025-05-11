@@ -9,8 +9,18 @@ import authRoutes from './routes/auth_routes.js';
 
 dotenv.config();
 const app = express();
+
+
+app.use((req, res, next) => {
+	res.header("Access-Control-Allow-Origin", true);
+	next();
+});
 app.use(express.json());
-app.use(cors());
+app.use(cors({
+		origin:"http://localhost:5173",
+		credentials: true // Allow cookies to be sent with requests
+	}
+));
 app.use(cookieParser());
 
 app.use('/api/users', userRoutes);

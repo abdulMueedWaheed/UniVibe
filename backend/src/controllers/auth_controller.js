@@ -107,10 +107,10 @@ export const login = async (req, res) => {
         }
 
         // Generate a JWT token
-        const token = generateToken(data[0].id, data[0].user_name, data[0].email_address, res);
+        const token = generateToken(user.id, user.user_name, user.email_address, res);
 
         console.log("User logged in successfully");
-        res.status(200).json({ message: "Login successful", token });
+        res.status(200).json({ message: "Login successful",user , token });
     } catch (error) {
         console.error("Unexpected error during login:", error);
         res.status(500).json({ message: "Unexpected error", error });

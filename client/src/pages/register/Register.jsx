@@ -5,9 +5,9 @@ import { useState } from 'react'
 import axios from "axios"
 
 const Register = () => {
-    const [err, setErr] = useState(false);
+    const [err, setErr] = useState(null);
 
-    const [input, setInput] = useState({
+    const [inputs, setInputs] = useState({
         user_name: "", // Updated to match the backend key
         password: "",
         email_address: "",
@@ -15,7 +15,7 @@ const Register = () => {
     });
 
     const handleChange = e => {
-        setInput((prev) => ({
+        setInputs((prev) => ({
             ...prev,
             [e.target.name]: e.target.value
         }))
@@ -24,10 +24,10 @@ const Register = () => {
     const handleClick = async (e) => {
         e.preventDefault();
         try {
-            await axios.post("http://localhost:5000/api/auth/register", input);
+            await axios.post("http://localhost:5000/api/auth/register", inputs);
             console.log("User registered successfully");
         } catch (error) {
-            setErr(true);
+            setErr(error.response.data);
             console.error("Error during registration:", error);
         }
     };
@@ -44,6 +44,9 @@ const Register = () => {
                         <input type="password" placeholder="Password" name='password' onChange={handleChange} />
                         <button onClick={handleClick}>Register</button>
                     </form>
+                    
+                    {/* Display error message */}
+                    {err && <p className="error">{err.message}</p>}
                 </div>
 
                 <div className="right">

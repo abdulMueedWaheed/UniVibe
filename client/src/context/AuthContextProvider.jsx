@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
-import {AuthContext} from "./AuthContext"
+import {AuthContext} from "./AuthContext";
+import axios from "axios";
 
 
 export const AuthContextProvider = ({children}) => {
@@ -9,14 +10,22 @@ export const AuthContextProvider = ({children}) => {
         JSON.parse(localStorage.getItem("user")) || null
     );
 
-    const login = () => {
-        // TO DO
-        setCurrentUser({
-            id: 1,
-            name: 'Abdullah Asim',
-            profilePic: "https://i.pinimg.com/736x/83/38/1b/83381b20d67747ed8c8d0d4afac89f37.jpg"
+  const login = async(inputs) => {
+    try {
+        const res = await axios.post("http://localhost:5000/api/auth/login", inputs, {
+            withCredentials: true, // Ensure cookies are sent with the request
         });
+
+        // Set the current user and store it in localStorage
+        setCurrentUser(res.data);
+        localStorage.setItem("user", JSON.stringify(res.data));
     }
+    
+    catch (error) {
+        console.error("Error during login:", error);
+        throw error; // Re-throw the error so it can be caught in the Login component
+    }
+  }
 
     // Set Current User info in 'localStorage'
     useEffect(()=> {
