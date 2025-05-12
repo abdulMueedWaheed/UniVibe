@@ -10,7 +10,7 @@ import EmailOutlinedIcon from "@mui/icons-material/EmailOutlined";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import Posts from "../../components/posts/Posts";
 import CreatePostModal from "../../components/createPostModal/createPostModal";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { makeRequest } from "../../axios.js";
 import { useContext } from "react";
@@ -18,16 +18,46 @@ import { AuthContext } from "../../context/AuthContext";
 
 const Profile = () => {
   const { currentUser } = useContext(AuthContext);
-  const [isModalOpen, setIsModalOpen] = useState(false); // State to toggle modal visibility
-  const [coverPic, setCoverPic] = useState(currentUser.cover_pic || ""); // State for cover image
-  const [profilePic, setProfilePic] = useState(currentUser.profile_pic || ""); // State for profile image
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [coverPic, setCoverPic] = useState(currentUser?.cover_pic || "");
+  const [profilePic, setProfilePic] = useState(currentUser?.profile_pic || "");
+  const [userData, setUserData] = useState({
+    full_name: currentUser?.full_name || "Loading...",
+    location: currentUser?.location || "Location not set",
+    website: currentUser?.website || "Website not set"
+  });
+
+  // Fetch latest user data
+  useEffect(() => {
+    const fetchUserData = async () => {
+      if (currentUser?.id) {
+        try {
+          const res = await makeRequest.get(`/users/${currentUser.id}`);
+          if (res.data && res.data.data) {
+            const user = res.data.data;
+            setUserData({
+              full_name: user.full_name || "User",
+              location: user.location || "Location not set",
+              website: user.website || "Website not set"
+            });
+            setCoverPic(user.cover_pic || "");
+            setProfilePic(user.profile_pic || "");
+          }
+        } catch (error) {
+          console.error("Error fetching user data:", error);
+        }
+      }
+    };
+
+    fetchUserData();
+  }, [currentUser?.id]);
 
   const handleOpenModal = () => {
-    setIsModalOpen(true); // Open the modal
+    setIsModalOpen(true);
   };
 
   const handleCloseModal = () => {
-    setIsModalOpen(false); // Close the modal
+    setIsModalOpen(false);
   };
 
   const handleCoverPicChange = async (e) => {
@@ -39,14 +69,13 @@ const Profile = () => {
 
       try {
         const res = await makeRequest.post("/users/update-cover-pic", formData);
-        setCoverPic(res.data.cover_pic); // Update the coverPic state
+        setCoverPic(res.data.cover_pic);
       } catch (error) {
         console.error("Error updating cover picture:", error);
       }
     }
   };
 
-  // Handle profile image upload
   const handleProfilePicChange = async (e) => {
     const file = e.target.files[0];
     if (file) {
@@ -59,7 +88,7 @@ const Profile = () => {
           "/users/update-profile-pic",
           formData
         );
-        setProfilePic(res.data.profile_pic); // Update the profilePic state
+        setProfilePic(res.data.profile_pic);
       } catch (error) {
         console.error("Error updating profile picture:", error);
       }
@@ -67,35 +96,18 @@ const Profile = () => {
   };
 
   // Fetch the user's posts
-  const {
-    isLoading,
-    error,
-    data: posts,
-  } = useQuery({
-    queryKey: ["userPosts", currentUser.id], // Unique query key for user's posts
+  const { isLoading, error, data: posts } = useQuery({
+    queryKey: ["userPosts", currentUser?.id],
     queryFn: async () => {
       try {
-        console.log(currentUser.id);
         const res = await makeRequest.get(`/posts/${currentUser.id}`);
-        console.log("API Response:", res.data.data); // Debug: Log the API response
-        console.log("obj", res.data.data[0]);
-
-        // Check if the response contains the expected data structure
-        if (res.data && Array.isArray(res.data.data)) {
-          return res.data.data;
-        } else {
-          console.warn(
-            "API response does not contain expected data structure:",
-            res.data
-          );
-          return []; // Return empty array if structure is not as expected
-        }
+        return res.data.data;
       } catch (err) {
         console.error("Error fetching posts:", err);
-        return []; // Return empty array on error
+        return [];
       }
     },
-    enabled: !!currentUser?.id, // Only run the query if currentUser.id is defined
+    enabled: !!currentUser?.id,
   });
 
   return (
@@ -141,29 +153,29 @@ const Profile = () => {
             <a href="http://facebook.com">
               <FacebookTwoToneIcon fontSize="large" />
             </a>
-            <a href="http://facebook.com">
+            <a href="http://instagram.com">
               <InstagramIcon fontSize="large" />
             </a>
-            <a href="http://facebook.com">
+            <a href="http://twitter.com">
               <TwitterIcon fontSize="large" />
             </a>
-            <a href="http://facebook.com">
+            <a href="http://linkedin.com">
               <LinkedInIcon fontSize="large" />
             </a>
-            <a href="http://facebook.com">
+            <a href="http://pinterest.com">
               <PinterestIcon fontSize="large" />
             </a>
           </div>
           <div className="center">
-            <span>Jane Doe</span>
+            <span>{userData.full_name}</span>
             <div className="info">
               <div className="item">
                 <PlaceIcon />
-                <span>USA</span>
+                <span>{userData.location}</span>
               </div>
               <div className="item">
                 <LanguageIcon />
-                <span>lama.dev</span>
+                <span>{userData.website}</span>
               </div>
             </div>
             <button>follow</button>
@@ -171,8 +183,7 @@ const Profile = () => {
           <div className="right">
             <EmailOutlinedIcon />
             <MoreVertIcon />
-            <button onClick={handleOpenModal}>Create Post</button>{" "}
-            {/* Button to open modal */}
+            <button onClick={handleOpenModal}>Create Post</button>
           </div>
         </div>
       </div>
@@ -188,7 +199,6 @@ const Profile = () => {
         )}
       </div>
 
-      {/* Modal for creating posts */}
       {isModalOpen && <CreatePostModal onClose={handleCloseModal} />}
     </div>
   );

@@ -13,14 +13,23 @@ const CreatePostModal = ({ onClose }) => {
   const queryClient = useQueryClient();
 
   const mutation = useMutation({
-	mutationFn: (newPost) => makeRequest.post("/posts", newPost), // Correct usage
-	onSuccess: () => {
-		queryClient.invalidateQueries(["posts"]); // Refresh the posts list
-		onClose(); // Close the modal after successful submission
-	},
-	onError: (error) => {
-		console.error("Error creating post:", error);
-	},
+    mutationFn: (newPost) => {
+      // When using FormData, we need to make sure headers are not manually set
+      // because the browser needs to set the correct Content-Type with boundary
+      return makeRequest.post("/posts", newPost, {
+        headers: {
+          // Don't set Content-Type here, let the browser set it with the correct boundary
+          // when sending multipart/form-data
+        }
+      });
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries(["posts"]); // Refresh the posts list
+      onClose(); // Close the modal after successful submission
+    },
+    onError: (error) => {
+      console.error("Error creating post:", error);
+    },
   });
 
   const handleSubmit = (e) => {
@@ -31,13 +40,28 @@ const CreatePostModal = ({ onClose }) => {
       return;
     }
 
-    const formData = {
-      user_id: currentUser.id, // Replace with the actual logged-in user's ID
-      content,
-      image_url: image ? URL.createObjectURL(image) : null,
-      video_url: video ? URL.createObjectURL(video) : null,
-    };
+    // Create a FormData object to send files
+    const formData = new FormData();
+    
+    // Append text data
+    formData.append("user_id", currentUser.id);
+    formData.append("content", content);
+    
+    // Append file if it exists
+    if (image) {
+      formData.append("file", image);
+      console.log("Appending image file:", image.name);
+    } else if (video) {
+      formData.append("file", video);
+      console.log("Appending video file:", video.name);
+    }
 
+    // Check if formData contains what you expect
+    for (let pair of formData.entries()) {
+      console.log(pair[0] + ': ' + pair[1]);
+    }
+
+    // Update the mutation function
     mutation.mutate(formData);
   };
 
@@ -47,7 +71,7 @@ const CreatePostModal = ({ onClose }) => {
         <button className="closeButton" onClick={onClose}>
           X
         </button>
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit} encType="multipart/form-data">
           <textarea
             placeholder="What's on your mind?"
             value={content}
