@@ -222,9 +222,6 @@ const Profile = () => {
             <div className="right">
               <EmailOutlinedIcon />
               <MoreVertIcon />
-              {isOwnProfile && (
-                <button onClick={handleOpenModal}>Create Post</button>
-              )}
             </div>
           </div>
         </div>

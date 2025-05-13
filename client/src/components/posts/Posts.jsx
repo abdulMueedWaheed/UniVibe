@@ -1,7 +1,7 @@
 import React from "react";
 import Post from "../post/Post";
 
-const Posts = React.memo(({ posts}) => {
+const Posts = React.memo(({posts}) => {
   console.log("Posts received:", posts);
   
   // Check if posts is undefined or null
