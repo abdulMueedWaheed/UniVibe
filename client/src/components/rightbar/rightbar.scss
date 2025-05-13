@@ -52,12 +52,13 @@
           }
         }
 
-
         .entity {
           display: flex;
           align-items: center;
           justify-content: space-between;
           margin: 10px 0;
+          overflow-x: scroll;
+          scrollbar-width: none;
 
           .entity-info {
             display: flex;

@@ -1,74 +1,83 @@
-import { useContext } from "react";
+import { useContext, useEffect, useState } from "react";
 import "./stories.scss";
 import { AuthContext } from "../../context/AuthContext";
 import { Link } from "react-router-dom";
+import { makeRequest } from "../../axios";
+import { useQuery } from "@tanstack/react-query";
 
 const Stories = () => {
+  const { currentUser } = useContext(AuthContext);
+  const [profilePic, setProfilePic] = useState("");
 
-  const {currentUser} = useContext(AuthContext);
+  // Fetch users from the database to use as stories
+  const { isLoading, error, data: users } = useQuery({
+    queryKey: ["storyUsers"],
+    queryFn: async () => {
+      try {
+        // Fetch a list of users (limit to 6 for stories)
+        const res = await makeRequest.get("/users?limit=6");
+        console.log("Story users response:", res.data);
+        return res.data.data || [];
+      } catch (err) {
+        console.error("Error fetching users for stories:", err);
+        return [];
+      }
+    }
+  });
 
-  // TEMPORARY DATA (Later to be fetched from API)
-  const stories = [
-    {
-      id: 1,
-      userId: 1,
-      name: "NSAC",
-      img: "https://i.pinimg.com/736x/64/e8/00/64e80093aa9e4e2bc3ff5aba88bc22f4.jpg"
-    },
-    {
-      id: 2,
-      userId: 2,
-      name: "NSAC",
-      img: "https://i.pinimg.com/736x/64/e8/00/64e80093aa9e4e2bc3ff5aba88bc22f4.jpg"
-    },
-    {
-      id: 3,
-      userId: 3,
-      name: "NSAC",
-      img: "https://i.pinimg.com/736x/64/e8/00/64e80093aa9e4e2bc3ff5aba88bc22f4.jpg"
-    },
-    {
-      id: 4,
-      userId: 4,
-      name: "NSAC",
-      img: "https://i.pinimg.com/736x/64/e8/00/64e80093aa9e4e2bc3ff5aba88bc22f4.jpg"
-    },
-    {
-      id: 5,
-      userId: 5,
-      name: "NSAC",
-      img: "https://i.pinimg.com/736x/64/e8/00/64e80093aa9e4e2bc3ff5aba88bc22f4.jpg"
-    },
-    {
-      id: 6,
-      name: "NSAC",
-      img: "https://i.pinimg.com/736x/64/e8/00/64e80093aa9e4e2bc3ff5aba88bc22f4.jpg"
-    },
-    {
-      id: 7,
-      name: "NSAC",
-      img: "https://i.pinimg.com/736x/64/e8/00/64e80093aa9e4e2bc3ff5aba88bc22f4.jpg"
-    },
-  ];
+  useEffect(() => {
+    const fetchProfilePic = async () => {
+      try {
+        console.log("Fetching user data for ID:", currentUser.id);
+        const res = await makeRequest.get(`/users/${currentUser.id}`);
+        console.log("User data response:", res.data);
+
+        if (res.data && res.data.data) {
+          const user = res.data.data;
+          setProfilePic(user.profile_pic || "");
+        }
+      }
+      catch (error) {
+        console.error("Error fetching user data:", error);
+      }
+    };
+
+    fetchProfilePic();
+  }, [])
 
   return (
     <div className='stories'>
       <div className="story">
-        <img src={currentUser.profilePic} />
-        {/* <span>{currentUser.name}</span> */}
+        <img src={profilePic || "https://i.pinimg.com/736x/64/e8/00/64e80093aa9e4e2bc3ff5aba88bc22f4.jpg"} />
         <button id="add-story-btn">+</button>
       </div>
-      {
-        stories.map(story => (
-          <div className="story" key={story.id}>
-            <Link to={`/profile/${story.userId}`}>
-              <img src={story.img} alt={story.name} />
+
+      {isLoading ? (
+        // Show placeholder stories while loading
+        Array(3).fill(0).map((_, i) => (
+          <div className="story" key={`loading-${i}`}>
+            <div className="skeleton-image"></div>
+          </div>
+        ))
+      ) : error ? (
+        <div>Error loading stories</div>
+      ) : users && users.length > 0 ? (
+        // Map through actual users from database
+        users.filter(user => user.id !== currentUser.id).map(user => (
+          <div className="story" key={user.id}>
+            <Link to={`/profile/${user.id}`}>
+              <img
+                src={user.profile_pic || "https://i.pinimg.com/736x/64/e8/00/64e80093aa9e4e2bc3ff5aba88bc22f4.jpg"}
+                alt={user.full_name}
+              />
             </Link>
           </div>
         ))
-      }
+      ) : (
+        <div>No stories to display</div>
+      )}
     </div>
-  )
+  );
 };
 
 export default Stories;
