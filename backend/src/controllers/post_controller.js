@@ -3,7 +3,7 @@ import { v4 as uuidv4 } from 'uuid';
 
 export const getPosts = async (req, res) => {
     try {
-        // Fetch all posts from the 'posts' table with user information
+        // Fetch all posts from the 'posts' table with user information and comments count
         const { data, error } = await supabase
             .from("posts")
             .select(`
@@ -13,7 +13,8 @@ export const getPosts = async (req, res) => {
                     full_name,
                     profile_pic,
                     cover_pic
-                )
+                ),
+                comments:comments(count)
             `)
             .order('created_at', { ascending: false }); // Most recent posts first
 
@@ -23,8 +24,14 @@ export const getPosts = async (req, res) => {
             return res.status(500).json({ message: "Error fetching posts", error });
         }
 
+        // Transform the data to include comments count
+        const transformedData = data.map(post => ({
+            ...post,
+            comments_count: post.comments?.[0]?.count || 0
+        }));
+
         // Return the fetched posts
-        res.status(200).json({ message: "Posts fetched successfully", data });
+        res.status(200).json({ message: "Posts fetched successfully", data: transformedData });
     }
     
     catch (error) {
@@ -43,7 +50,7 @@ export const getPostsByUser = async (req, res) => {
     };
 
     try {
-        // Fetch posts for the given user_id with user information
+        // Fetch posts for the given user_id with user information and comments count
         const { data, error } = await supabase
             .from("posts")
             .select(`
@@ -53,7 +60,8 @@ export const getPostsByUser = async (req, res) => {
                     full_name,
                     profile_pic,
                     cover_pic
-                )
+                ),
+                comments:comments(count)
             `)
             .eq("user_id", user_id) // Filter by user_id
             .order('created_at', { ascending: false }); // Most recent posts first
@@ -64,8 +72,14 @@ export const getPostsByUser = async (req, res) => {
             return res.status(500).json({ message: "Error fetching posts by user", error });
         }
 
+        // Transform the data to include comments count
+        const transformedData = data.map(post => ({
+            ...post,
+            comments_count: post.comments?.[0]?.count || 0
+        }));
+
         // Return the fetched posts
-        res.status(200).json({ message: "Posts fetched successfully", data });
+        res.status(200).json({ message: "Posts fetched successfully", data: transformedData });
     }
     
     catch (error) {

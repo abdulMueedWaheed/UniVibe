@@ -3,6 +3,7 @@ import Post from "../post/Post";
 
 const Posts = React.memo(({posts}) => {
   console.log("Posts received:", posts);
+  // console.log("user id:" , posts.user_id  )
   
   // Check if posts is undefined or null
   if (!posts) {
