@@ -1,38 +1,49 @@
-import "./posts.scss"
-import Post from "../post/Post"
+import React from "react";
+import Post from "../post/Post";
 
-const Posts = () => {
+const Posts = React.memo(({ posts}) => {
+  console.log("Posts received:", posts);
+  
+  // Check if posts is undefined or null
+  if (!posts) {
+    return <div className="no-posts">No posts available</div>;
+  }
 
-  // TEMPORARY DATA
-  const posts = [
-    {
-      id: 1,
-      name: "Adeel Hassan",
-      userId: 2,
-      profilePic: "https://i.pinimg.com/736x/a0/fc/5a/a0fc5ac1b6b833a52a74863ecc981a1d.jpg",
-      desc: "Lorem, ipsum dolor sit amet consectetur adipisicing elit.",
-      img: "https://i.pinimg.com/736x/97/89/b1/9789b117061558140dcc62ea6676cfe3.jpg"
-    },
-    {
-      id: 2,
-      name: "Abdul Mueed",
-      userId: 3,
-      profilePic: "https://i.pinimg.com/736x/a0/fc/5a/a0fc5ac1b6b833a52a74863ecc981a1d.jpg",
-      desc: "Lorem, ipsum dolor sit amet consectetur adipisicing elit.",
-      // img: "https://i.pinimg.com/736x/97/89/b1/9789b117061558140dcc62ea6676cfe3.jpg"
-    }
-  ]
-  return (
-    <div className='posts'>
-      {
-        posts.map(post=>(
+  // Check if posts is an object with a data property (direct API response)
+  if (posts.data && Array.isArray(posts.data)) {
+    // If posts is the entire API response object
+    return (
+      <div className="posts">
+        {posts.data.map((post) => (
           <div className="post" key={post.id}>
-            <Post post={post}/>
+            <Post post={post} />
           </div>
-        ))
-      } 
-    </div>
-  )
-}
+        ))}
+      </div>
+    );
+  }
+  
+  // Check if posts is an array (already extracted data)
+  if (Array.isArray(posts)) {
+    // If posts is already the array of post objects
+    if (posts.length === 0) {
+      return <div className="no-posts">No posts available</div>;
+    }
+    
+    return (
+      <div className="posts">
+        {posts.map((post) => (
+          <div className="post" key={post.id}>
+            <Post post={post} />
+          </div>
+        ))}
+      </div>
+    );
+  }
+  
+  // If posts is neither an object with data nor an array
+  console.error("Posts component received invalid data format:", posts);
+  return <div className="no-posts">No posts available</div>;
+});
 
-export default Posts
+export default Posts;

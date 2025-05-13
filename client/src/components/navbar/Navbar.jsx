@@ -11,6 +11,7 @@ import SearchOulintedIcon from '@mui/icons-material/SearchOutlined';
 import { DarkModeContext } from '../../context/DarkModeContext';
 import { useContext } from 'react';
 import { AuthContext } from '../../context/AuthContext';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
 const Navbar = () => {
   const {darkMode, toggle} = useContext(DarkModeContext);
@@ -22,21 +23,24 @@ const Navbar = () => {
         <Link to="/" style={{textDecoration: 'none'}}>
           <span className="logo">UniVibe</span>
         </Link>
+
         <HomeOutlinedIcon sx={{ cursor: 'pointer' }}/> 
         {(darkMode === false)? <DarkModeOutlinedIcon onClick={toggle} sx={{ cursor: 'pointer' }} /> :<LightModeOutlinedIcon sx={{ cursor: 'pointer' }} onClick={toggle}/>}
         <GridViewOutlinedIcon sx={{ cursor: 'pointer' }}/>
+
         <div className="search">
           <SearchOulintedIcon/>
           <input type='text' placeholder='search'/>
         </div>
       </div>
+      
       <div className="right">
         <PersonOutlinedIcon sx={{ cursor: 'pointer' }}/>
         <EmailOutlinedIcon sx={{ cursor: 'pointer' }}/>
         <NotificationsOutlinedIcon sx={{ cursor: 'pointer' }}/>
         <div className="user">
-          <img src={currentUser.profilePic} alt="Profile Pic" />
-          <span>{currentUser.name}</span>
+          <img src={currentUser.profile_pic} alt="Profile Pic" />
+          <span>{currentUser.full_name}</span>
         </div>
       </div>
     </div>

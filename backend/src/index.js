@@ -1,7 +1,36 @@
-import {express} from "express"
+import express from 'express';
+import dotenv from 'dotenv';
+import cors from "cors";
+import cookieParser from "cookie-parser";
 
-const app= express();
+import supabase from './config/supabaseClient.js';
+import userRoutes from './routes/user_routes.js';
+import authRoutes from './routes/auth_routes.js';
+import postRoutes from './routes/post_routes.js';
 
-app.listen(8800, () => {
-    console.log("Connected to backend.");
+dotenv.config();
+const app = express();
+
+
+app.use((req, res, next) => {
+	res.header("Access-Control-Allow-Origin", true);
+	next();
+});
+app.use(express.json());
+app.use(cors({
+		origin:"http://localhost:5173",
+		credentials: true // Allow cookies to be sent with requests
+	}
+));
+app.use(cookieParser());
+
+app.use('/api/users', userRoutes);
+app.use('/api/auth', authRoutes);
+app.use('/api/posts', postRoutes);
+
+app.get('/', (req, res) => res.send('Backend is running!'));
+
+const PORT = process.env.PORT;
+app.listen(PORT, () => {
+	console.log(`Server running on: http://localhost:${PORT}`);
 });
