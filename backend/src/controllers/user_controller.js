@@ -6,15 +6,15 @@ export const updateCoverPic = async (req, res) => {
   const file = req.file; // File from multer
 
   console.log("Received user_id:", user_id);
-  console.log("Received file:", file);
+  console.log("Received file:", file ? file.originalname : "none");
 
   if (!user_id || !file) {
     return res.status(400).json({ message: "User ID and file are required" });
   }
 
   try {
-    // Generate a unique file name
-    const fileName = `${file.originalname}`;
+    // Generate a unique file name with folder structure
+    const fileName = `cover-pics/${uuidv4()}-${file.originalname}`;
 
     // Upload the file to Supabase Storage
     const { data, error } = await supabase.storage
@@ -24,26 +24,37 @@ export const updateCoverPic = async (req, res) => {
       });
 
     if (error) {
+      console.error("Error uploading file to storage:", error);
       throw error;
     }
 
     // Get the public URL of the uploaded file
-    const { publicUrl } = supabase.storage.from("user-uploads").getPublicUrl(fileName);
+    // FIXED: The correct way to get publicUrl
+    const { data: urlData } = supabase.storage
+      .from("user-uploads")
+      .getPublicUrl(fileName);
+      
+    const publicUrl = urlData.publicUrl;
+    console.log("Generated public URL:", publicUrl);
 
     // Update the user's cover_pic in the database
-    const{updateError}=await supabase.from("users").update({ cover_pic: publicUrl }).eq("id", user_id);
+    const { data: userData, error: updateError } = await supabase
+      .from("users")
+      .update({ cover_pic: publicUrl })
+      .eq("id", user_id)
+      .select();
 
     if (updateError) {
       console.error("Error updating cover_pic in database:", updateError);
       throw updateError;
     }
 
+    console.log("User cover pic updated successfully:", userData);
     res.status(200).json({ cover_pic: publicUrl });
   }
-  
   catch (error) {
     console.error("Error updating cover picture:", error);
-    res.status(500).json({ message: "Error updating cover picture" });
+    res.status(500).json({ message: "Error updating cover picture", error: error.message });
   }
 };
 
@@ -58,6 +69,8 @@ export const updateProfilePic = async (req, res) => {
   try {
     // Generate a unique file name
     const fileName = `profile-pics/${uuidv4()}-${file.originalname}`;
+    
+    console.log(`Uploading file ${fileName} for user ${user_id}`);
 
     // Upload the file to Supabase Storage
     const { data, error } = await supabase.storage
@@ -67,20 +80,69 @@ export const updateProfilePic = async (req, res) => {
       });
 
     if (error) {
+      console.error("Error uploading file to storage:", error);
       throw error;
     }
 
     // Get the public URL of the uploaded file
-    const { publicUrl } = supabase.storage.from("user-uploads").getPublicUrl(fileName);
+    // FIXED: The correct way to get publicUrl 
+    const { data: urlData } = supabase.storage
+      .from("user-uploads")
+      .getPublicUrl(fileName);
 
+    const publicUrl = urlData.publicUrl;
+    console.log("Generated public URL:", publicUrl);
+    
     // Update the user's profile_pic in the database
-    await supabase.from("users").update({ profile_pic: publicUrl }).eq("id", user_id);
+    const { data: userData, error: updateError } = await supabase
+      .from("users")
+      .update({ profile_pic: publicUrl })
+      .eq("id", user_id)
+      .select();
 
+    if (updateError) {
+      console.error("Error updating profile_pic in database:", updateError);
+      throw updateError;
+    }
+
+    console.log("User profile updated successfully:", userData);
     res.status(200).json({ profile_pic: publicUrl });
+  }
+  catch (error) {
+    console.error("Error updating profile picture:", error);
+    res.status(500).json({ message: "Error updating profile picture", error: error.message });
+  }
+};
+
+// Add this function to your user_controller.js file
+
+export const getUser = async (req, res) => {
+  const { user_id } = req.params;
+  
+  try {
+    console.log(`Fetching user with ID: ${user_id}`);
+    
+    // Fetch the user by ID
+    const { data, error } = await supabase
+      .from("users")
+      .select("*")
+      .eq("id", user_id)
+      .single();
+      
+    if (error) {
+      console.error("Error fetching user:", error);
+      return res.status(500).json({ message: "Error fetching user", error });
+    }
+    
+    if (!data) {
+      return res.status(404).json({ message: "User not found" });
+    }
+    
+    res.status(200).json({ message: "User fetched successfully", data });
   }
   
   catch (error) {
-    console.error("Error updating profile picture:", error);
-    res.status(500).json({ message: "Error updating profile picture" });
+    console.error("Unexpected error:", error);
+    res.status(500).json({ message: "Unexpected error", error });
   }
 };

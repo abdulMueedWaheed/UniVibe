@@ -78,21 +78,25 @@ const Profile = () => {
 
   const handleProfilePicChange = async (e) => {
     const file = e.target.files[0];
-    if (file) {
-      const formData = new FormData();
-      formData.append("file", file);
-      formData.append("user_id", currentUser.id);
+  if (file) {
+    const formData = new FormData();
+    formData.append("file", file);
+    formData.append("user_id", currentUser.id);
 
-      try {
-        const res = await makeRequest.post(
-          "/users/update-profile-pic",
-          formData
-        );
-        setProfilePic(res.data.profile_pic);
-      } catch (error) {
-        console.error("Error updating profile picture:", error);
-      }
+    try {
+      const res = await makeRequest.post(
+        "/users/update-profile-pic",
+        formData
+      );
+      // Add this line to update the profile pic state
+      setProfilePic(res.data.profile_pic); 
+      console.log("Profile pic updated:", res.data.profile_pic);
     }
+    
+    catch (error) {
+      console.error("Error updating profile picture:", error);
+    }
+  }
   };
 
   // Fetch the user's posts
