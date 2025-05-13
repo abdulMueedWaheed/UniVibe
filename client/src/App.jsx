@@ -64,7 +64,7 @@ function App() {
         <Route path='/register' element={<Register />} />
         <Route element={<ProtectedRoute><HomeLayout /></ProtectedRoute>}>
           <Route index element={<Home />} />
-          <Route path='/profile/:id' element={<Profile />} />
+          <Route path='/profile/:userId' element={<Profile />} />
         </Route>
         <Route path='/events' element={<ProtectedRoute><EventsLayout /></ProtectedRoute>} />
       </Routes>

@@ -15,24 +15,42 @@ import { useQuery } from "@tanstack/react-query";
 import { makeRequest } from "../../axios.js";
 import { useContext } from "react";
 import { AuthContext } from "../../context/AuthContext";
+import { useParams } from "react-router-dom";  // Add this import
 
 const Profile = () => {
   const { currentUser } = useContext(AuthContext);
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [coverPic, setCoverPic] = useState(currentUser?.cover_pic || "");
-  const [profilePic, setProfilePic] = useState(currentUser?.profile_pic || "");
-  const [userData, setUserData] = useState({
-    full_name: currentUser?.full_name || "Loading...",
-    location: currentUser?.location || "Location not set",
-    website: currentUser?.website || "Website not set"
-  });
+  const { userId } = useParams();  // Get userId from URL params
 
-  // Fetch latest user data
+  console.log("Raw userId from URL:", userId);
+  console.log("Raw currentUser.id:", currentUser?.id);
+  
+  // Use the URL userId if available, otherwise use currentUser.id (for own profile)
+  const profileUserId = userId || currentUser?.id?.toString();
+
+  console.log("Final profileUserId:", profileUserId, "Type:", typeof profileUserId);
+
+  console.log("URL userId:", userId);
+  console.log("currentUser.id:", currentUser?.id);
+  console.log("profileUserId:", profileUserId);
+  
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [coverPic, setCoverPic] = useState("");
+  const [profilePic, setProfilePic] = useState("");
+  const [userData, setUserData] = useState({
+    full_name: "Loading...",
+    location: "Location not set",
+    website: "Website not set"
+  });
+  
+  // Fetch profile user data
   useEffect(() => {
     const fetchUserData = async () => {
-      if (currentUser?.id) {
+      if (profileUserId) {
         try {
-          const res = await makeRequest.get(`/users/${currentUser.id}`);
+          console.log("Fetching user data for ID:", profileUserId);
+          const res = await makeRequest.get(`/users/${profileUserId}`);
+          console.log("User data response:", res.data);
+          
           if (res.data && res.data.data) {
             const user = res.data.data;
             setUserData({
@@ -43,14 +61,16 @@ const Profile = () => {
             setCoverPic(user.cover_pic || "");
             setProfilePic(user.profile_pic || "");
           }
-        } catch (error) {
+        }
+        
+        catch (error) {
           console.error("Error fetching user data:", error);
         }
       }
     };
 
     fetchUserData();
-  }, [currentUser?.id]);
+  }, [profileUserId]);
 
   const handleOpenModal = () => {
     setIsModalOpen(true);
@@ -70,7 +90,9 @@ const Profile = () => {
       try {
         const res = await makeRequest.post("/users/update-cover-pic", formData);
         setCoverPic(res.data.cover_pic);
-      } catch (error) {
+      }
+      
+      catch (error) {
         console.error("Error updating cover picture:", error);
       }
     }
@@ -101,18 +123,26 @@ const Profile = () => {
 
   // Fetch the user's posts
   const { isLoading, error, data: posts } = useQuery({
-    queryKey: ["userPosts", currentUser?.id],
+    queryKey: ["userPosts", profileUserId],
     queryFn: async () => {
       try {
-        const res = await makeRequest.get(`/posts/${currentUser.id}`);
-        return res.data.data;
+        console.log(`Fetching posts for user ID: ${profileUserId}`);
+        const res = await makeRequest.get(`/posts/${profileUserId}`);
+        console.log("Posts response:", res.data);
+        return res.data.data || [];
       } catch (err) {
         console.error("Error fetching posts:", err);
-        return [];
+        throw err;
       }
     },
-    enabled: !!currentUser?.id,
+    enabled: !!profileUserId,
   });
+  
+  // Determine if the profile belongs to the current user
+  const isOwnProfile = currentUser?.id && 
+    (profileUserId === currentUser.id.toString());
+
+  console.log("Is own profile?", isOwnProfile);
 
   return (
     <div className="profile">
@@ -126,12 +156,14 @@ const Profile = () => {
             alt="Cover Pic"
             className="cover"
           />
-          <input
-            type="file"
-            id="coverPicInput"
-            style={{ display: "none" }}
-            onChange={handleCoverPicChange}
-          />
+          {isOwnProfile && (
+            <input
+              type="file"
+              id="coverPicInput"
+              style={{ display: "none" }}
+              onChange={handleCoverPicChange}
+            />
+          )}
         </label>
 
         <label htmlFor="profilePicInput">
@@ -143,18 +175,19 @@ const Profile = () => {
             alt="Profile"
             className="profilePic"
           />
+          {isOwnProfile && (
+            <input
+              type="file"
+              id="profilePicInput"
+              style={{ display: "none" }}
+              onChange={handleProfilePicChange}
+            />
+          )}
         </label>
-        <input
-          type="file"
-          id="profilePicInput"
-          style={{ display: "none" }}
-          onChange={handleProfilePicChange}
-        />
       </div>
       <div className="profileContainer">
         <div className="uInfo">
-
-          <span>Nust Stray Animals Society</span>
+          <span>{userData.full_name}</span>
           <div className="bottom">
             <div className="left">
               <a href="http://facebook.com">
@@ -177,39 +210,42 @@ const Profile = () => {
               <div className="info">
                 <div className="item">
                   <PlaceIcon />
-                  <span>USA</span>
+                  <span>{userData.location}</span>
                 </div>
                 <div className="item">
                   <LanguageIcon />
-                  <span>lama.dev</span>
+                  <span>{userData.website}</span>
                 </div>
               </div>
-              <button>follow</button>
+              {!isOwnProfile && <button>follow</button>}
             </div>
             <div className="right">
               <EmailOutlinedIcon />
               <MoreVertIcon />
-              <button onClick={handleOpenModal}>Create Post</button>
+              {isOwnProfile && (
+                <button onClick={handleOpenModal}>Create Post</button>
+              )}
             </div>
           </div>
         </div>
-        {/* <Posts/> */}
       </div>
 
       <div className="postsContainer">
-        <h3>Your Posts</h3>
+        <h3>{isOwnProfile ? "Your Posts" : `${userData.full_name}'s Posts`}</h3>
         {isLoading ? (
           <p>Loading...</p>
         ) : error ? (
           <p>Error loading posts</p>
-        ) : (
+        ) : posts && posts.length > 0 ? (
           <Posts posts={posts} />
+        ) : (
+          <p>No posts to display</p>
         )}
       </div>
 
       {isModalOpen && <CreatePostModal onClose={handleCloseModal} />}
     </div>
   );
-};
+}
 
 export default Profile;

@@ -146,3 +146,29 @@ export const getUser = async (req, res) => {
     res.status(500).json({ message: "Unexpected error", error });
   }
 };
+
+export const getUsersForStories = async(req, res) => {
+    try {
+        const limit = req.query.limit || 10;
+    
+        const { data, error } = await supabase
+          .from('users')
+          .select('id, full_name, profile_pic')
+          .limit(limit);
+        
+        if (error) throw error;
+        
+        return res.status(200).json({
+          success: true,
+          data
+        });
+  }
+  
+  catch (error) {
+      console.error(error);
+      return res.status(500).json({
+          success: false,
+          message: error.message
+      });
+  }
+};
