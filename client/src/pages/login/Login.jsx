@@ -10,8 +10,8 @@ const Login = () => {
 
   const [inputs, setInputs] = useState({
     user_name: "", // For Students
-    password: "",
-    email_address: "",
+    password: "", // for both
+    email_address: "",  // for both
   });
 
   const navigate = useNavigate();
@@ -39,7 +39,8 @@ const Login = () => {
         delete payload.user_name;
       }
 
-      await login(payload);
+      console.log("Calling login");
+      await login(userType, payload);
       navigate('/');
     }
 
@@ -65,10 +66,10 @@ const Login = () => {
         </div>
         <div className="right">
           <h1>Login</h1>
-          <select name="user_type" id="user_type" value={userType} onChange={handleUserTypeChange}>
+          {/* <select name="user_type" id="user_type" value={userType} onChange={handleUserTypeChange}>
             <option value="Student">Student</option>
             <option value="Society">Society</option>
-          </select>
+          </select> */}
           <form>
             {userType === "Student" ? (<input type="text" placeholder="Username" name='user_name' onChange={handleChange} />) :
             null}

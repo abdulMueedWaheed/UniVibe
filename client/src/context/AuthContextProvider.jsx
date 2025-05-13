@@ -10,11 +10,19 @@ export const AuthContextProvider = ({children}) => {
         JSON.parse(localStorage.getItem("user")) || null
     );
 
-  const login = async(inputs) => {
+  const login = async(userType, inputs) => {
     try {
-        const res = await axios.post("http://localhost:5000/api/auth/login", inputs, {
-            withCredentials: true, // Ensure cookies are sent with the request
-        });
+
+        if (userType === "Student") {
+            const res = await axios.post("http://localhost:5000/api/auth/login", inputs, {
+                withCredentials: true, // Ensure cookies are sent with the request
+            });
+        } else {
+            const res = await axios.post("http://localhost:5000/api/societies/login", inputs, {
+                withCredentials: true, // Ensure cookies are sent with the request
+            });
+            console.log("Logged in as Society: ", res.data.data);
+        }
 
         // Set the current user and store it in localStorage
         setCurrentUser(res.data.user);

@@ -5,17 +5,19 @@ import generateSocietyToken from '../utils/generateSocietyToken.js';
 
 
 export const registerSociety = async (req, res) => {
+
+  // TEMPORARY HARD CODED UNI
+  const university_id = 1;
   try {
     const { 
       society_name, 
-      university_id, 
       email_address, 
       password, 
-      society_description
-    } = req.body;
+      society_description 
+    } = req.body; 
 
     // Validate required fields
-    if (!society_name || !university_id || !email_address || !password) {
+    if (!society_name || !email_address || !password) {
       return res.status(400).json({
         success: false,
         message: "All required fields must be provided (society_name, university_id, email_address, password)"
