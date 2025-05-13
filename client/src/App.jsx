@@ -14,25 +14,26 @@ import { DarkModeContext } from './context/DarkModeContext'
 import { AuthContext } from "./context/AuthContext"
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import Societies from './pages/societies/Societies'
+import Explore from './pages/explore/Explore'
 
 function App() {
 
-  const {currentUser} = useContext(AuthContext);
-  const {darkMode} = useContext(DarkModeContext);
+  const { currentUser } = useContext(AuthContext);
+  const { darkMode } = useContext(DarkModeContext);
 
   const queryClient = new QueryClient();
 
   const HomeLayout = () => {
     return (
       <QueryClientProvider client={queryClient}>
-        <div className={`${darkMode? 'dark' : 'light'}-theme`}>
-          <Navbar/>
-          <div style={{display: 'flex'}}>
-            <Leftbar/>
-            <div style={{flex:6}}>
-              <Outlet/>
+        <div className={`${darkMode ? 'dark' : 'light'}-theme`}>
+          <Navbar />
+          <div style={{ display: 'flex' }}>
+            <Leftbar />
+            <div style={{ flex: 6 }}>
+              <Outlet />
             </div>
-            <Rightbar/>
+            <Rightbar />
           </div>
         </div>
       </QueryClientProvider>
@@ -42,10 +43,13 @@ function App() {
   // EVENTS LAYOUT  
   const SecondaryLayout = () => {
     return (
-      <div className={`${darkMode ? 'dark' : 'light'}-theme`}>
-        <Navbar/>
-        <Outlet/>
-      </div>
+      <QueryClientProvider client={queryClient}>
+        <div className={`${darkMode ? 'dark' : 'light'}-theme`}>
+          <Navbar />
+          <Outlet />
+        </div>
+      </QueryClientProvider>
+
     )
   }
 
@@ -68,12 +72,13 @@ function App() {
           <Route path='/profile/:userId' element={<Profile />} />
         </Route>
         <Route element={<ProtectedRoute><SecondaryLayout /></ProtectedRoute>} >
-          <Route path='/events' element={<Events/>} />
-          <Route path='/societies' element={<Societies/>}/>
+          <Route path='/events' element={<Events />} />
+          <Route path='/societies' element={<Societies />} />
+          <Route path='/explore' element={<Explore />} />
         </Route>
       </Routes>
     </>
-    
+
   )
 }
 

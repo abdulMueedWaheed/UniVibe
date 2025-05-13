@@ -21,9 +21,11 @@ const Leftbar = () => {
       <div className="container">
         <div className="menu">
           <div className="explore-btn">
+            <Link to='/explore' style={{textDecoration:"none", color:"white"}}>
             <Button variant='contained' sx={{ backgroundColor: "#f77a13" }} endIcon={<Explore />}>
               Explore
             </Button>
+            </Link>
           </div>
           <hr></hr>
           <div className="item">
