@@ -9,6 +9,7 @@ import VolunteerActivismOutlinedIcon from '@mui/icons-material/VolunteerActivism
 import VolunteerActivismRoundedIcon from '@mui/icons-material/VolunteerActivismRounded';
 import Comments from "../comments/Comments";
 import { useState } from "react";
+import { red } from "@mui/material/colors";
 
 const Post = ({ post }) => {
   const [commentsOpen, setCommentsOpen] = useState(false);
@@ -32,6 +33,9 @@ const Post = ({ post }) => {
   const formattedDate = post.created_at 
     ? new Date(post.created_at).toLocaleString() 
     : "1 min ago";
+
+  // Get comments count from post data
+  const commentsCount = post.comments_count || 0;
 
   return (
     <div className="post">
@@ -89,7 +93,7 @@ const Post = ({ post }) => {
 
         <div className="interaction">
           <div className="item">
-            {liked ? <FavoriteOutlinedIcon /> : <FavoriteBorderOutlinedIcon />}
+            {liked ? <FavoriteOutlinedIcon style={{color: red}} /> : <FavoriteBorderOutlinedIcon />}
             <span>
                Likes
             </span>
@@ -97,7 +101,7 @@ const Post = ({ post }) => {
           <div className="item" onClick={() => setCommentsOpen(!commentsOpen)}>
             <ChatBubbleOutlineOutlinedIcon />
             <span>
-              Comments
+               {commentsCount} Comments
             </span>
           </div>
           <div className="item">

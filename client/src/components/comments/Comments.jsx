@@ -1,4 +1,4 @@
-import { useContext, useState } from "react";
+import { useContext, useState, useEffect } from "react";
 import "./comments.scss";
 import { AuthContext } from "../../context/AuthContext";
 import SendIcon from '@mui/icons-material/Send';
@@ -11,6 +11,27 @@ const Comments = ({ postsID }) => {
   const { currentUser } = useContext(AuthContext);
   const [desc, setDesc] = useState("");
   const queryClient = useQueryClient();
+  const [profilePic, setProfilePic] = useState("");
+
+  useEffect(() => {
+    const fetchProfilePic = async () => {
+      try {
+        console.log("Fetching user data for ID:", currentUser.id);
+        const res = await makeRequest.get(`/users/${currentUser.id}`);
+        console.log("User data response:", res.data);
+
+        if (res.data && res.data.data) {
+          const user = res.data.data;
+          setProfilePic(user.profile_pic || "");
+        }
+      }
+      catch (error) {
+        console.error("Error fetching user data:", error);
+      }
+    };
+
+    fetchProfilePic();
+  }, [])
 
   console.log("Comments component received postsID:", postsID);
   // Fetch comments
@@ -56,7 +77,7 @@ const Comments = ({ postsID }) => {
     <div className="comments">
       <div className="write-comment">
         <img
-          src={currentUser?.profile_pic || "https://www.google.com/search?q=cats+pics&sca_esv=e4784d011bb8751d&sxsrf=AHTn8zqyrf1uLnvn_oMslXwQuVpje8Lglw%3A1747138279459&ei=5zYjaPDbG56D9u8P_OfBuAk&ved=0ahUKEwiw65SktaCNAxWegf0HHfxzEJcQ4dUDCBA&uact=5&oq=cats+pics&gs_lp=Egxnd3Mtd2l6LXNlcnAiCWNhdHMgcGljczILEAAYgAQYkQIYigUyBhAAGAcYHjIGEAAYBxgeMgYQABgHGB4yBhAAGAcYHjIGEAAYBxgeMgYQABgHGB4yBRAAGIAEMgYQABgHGB4yBhAAGAcYHkjFN1DFA1jtLXABeAGQAQCYAbUCoAGQDqoBBTItNi4xuAEDyAEA-AEBmAIFoAKOCcICDhAAGIAEGJECGLEDGIoFwgIKEAAYgAQYQxiKBZgDAJIHBzEuMC4yLjKgB5IjsgcFMi0yLjK4B4gJ&sclient=gws-wiz-serp#vhid=G1o41xHkr1ucMM&vssid=_8TYjaJLSO6Hr7_UP2-vnkQo_71"}
+          src={profilePic}
           alt="Profile_pic"
         />
         <input
