@@ -8,11 +8,14 @@ const Register = () => {
     const [err, setErr] = useState(null);
     const navigate = useNavigate();
 
+    const [userType, setUserType] = useState("Student");
+
     const [inputs, setInputs] = useState({
-        user_name: "", // Updated to match the backend key
+        user_name: "", // For students
         password: "",
         email_address: "",
-        full_name: ""
+        full_name: "",
+        description: "" // For societies
     });
 
     const handleChange = e => {
@@ -22,10 +25,28 @@ const Register = () => {
         }))
     };
 
+    const handleUserTypeChange = (e) => {
+        setUserType(e.target.value);
+    };
+
     const handleClick = async (e) => {
         e.preventDefault();
         try {
-            await axios.post("http://localhost:5000/api/auth/register", inputs);
+            // Create payload based on user type
+            const payload = { ...inputs };
+
+            // Add user type to the payload
+            payload.user_type = userType;
+
+            // If it's a society, we don't need username
+            if (userType === "Society") {
+                delete payload.user_name;
+            } else {
+                // If it's a student, we don't need description
+                delete payload.description;
+            }
+
+            await axios.post("http://localhost:5000/api/auth/register", payload);
             console.log("User registered successfully");
             //navigate to login
             navigate("/login");
@@ -40,14 +61,56 @@ const Register = () => {
             <div className="card">
                 <div className="left">
                     <h1>Register</h1>
+                    <select
+                        name="user_type"
+                        id="user_type"
+                        value={userType}
+                        onChange={handleUserTypeChange}
+                    >
+                        <option value="Student">Student</option>
+                        <option value="Society">Society</option>
+                    </select>
                     <form>
-                        <input type="text" placeholder="Name" name='full_name' onChange={handleChange} />
-                        <input type="text" placeholder="Username" name='user_name' onChange={handleChange} /> {/* Updated name */}
-                        <input type="email" placeholder="Email" name='email_address' onChange={handleChange} />
-                        <input type="password" placeholder="Password" name='password' onChange={handleChange} />
+                        <input
+                            type="text"
+                            placeholder="Name"
+                            name='full_name'
+                            onChange={handleChange}
+                        />
+
+                        <input
+                            type="email"
+                            placeholder="Email"
+                            name='email_address'
+                            onChange={handleChange}
+                        />
+                        <input
+                            type="password"
+                            placeholder="Password"
+                            name='password'
+                            onChange={handleChange}
+                        />
+
+                        {userType === "Student" ? (
+                            <input
+                                type="text"
+                                placeholder="Username"
+                                name='user_name'
+                                onChange={handleChange}
+                            />
+                        ) : (
+                            <textarea
+                                placeholder="Society Description"
+                                name='description'
+                                onChange={handleChange}
+                                rows="3"
+                            />
+                        )}
+
+
                         <button onClick={handleClick}>Register</button>
                     </form>
-                    
+
                     {/* Display error message */}
                     {err && <p className="error">{err.message}</p>}
                 </div>

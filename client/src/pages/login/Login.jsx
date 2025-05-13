@@ -1,37 +1,48 @@
-import React, { useContext , useState} from 'react';
+import React, { useContext, useState } from 'react';
 import './login.scss';
-import {Link, useNavigate} from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { AuthContext } from '../../context/AuthContext';
 
 
 const Login = () => {
   const [err, setErr] = useState(null);
+  const [userType , setUserType] = useState("Student");
 
   const [inputs, setInputs] = useState({
-      user_name: "", // Updated to match the backend key
-      password: "",
-      email_address: ""
+    user_name: "", // For Students
+    password: "",
+    email_address: "",
   });
 
   const navigate = useNavigate();
 
   const handleChange = e => {
-      setInputs((prev) => ({
-          ...prev,
-          [e.target.name]: e.target.value
-      }))
+    setInputs((prev) => ({
+      ...prev,
+      [e.target.name]: e.target.value
+    }))
   };
 
-  const {login} = useContext(AuthContext);
+  const handleUserTypeChange = (e) => {
+    setUserType(e.target.value);
+  }
 
-  const handleLogin = async(e) => {
+  const { login } = useContext(AuthContext);
+
+  const handleLogin = async (e) => {
     e.preventDefault();
-    
+
     try {
-      await login(inputs);
+      const payload = {...inputs};
+
+      if (userType === "Society") {
+        delete payload.user_name;
+      }
+
+      await login(payload);
       navigate('/');
     }
-    
+
     catch (error) {
       setErr(error.response.data);
     }
@@ -54,10 +65,15 @@ const Login = () => {
         </div>
         <div className="right">
           <h1>Login</h1>
+          <select name="user_type" id="user_type" value={userType} onChange={handleUserTypeChange}>
+            <option value="Student">Student</option>
+            <option value="Society">Society</option>
+          </select>
           <form>
-            <input type="text" placeholder="Username" name='user_name' onChange={handleChange}/>
-            <input type="password" placeholder="Password" name='password' onChange={handleChange}/>
-            <input type="text" placeholder="Email" name='email_address' onChange={handleChange}/>
+            {userType === "Student" ? (<input type="text" placeholder="Username" name='user_name' onChange={handleChange} />) :
+            null}
+            <input type="text" placeholder="Email" name='email_address' onChange={handleChange} />
+            <input type="password" placeholder="Password" name='password' onChange={handleChange} />
             <button onClick={handleLogin}>Login</button>
           </form>
 

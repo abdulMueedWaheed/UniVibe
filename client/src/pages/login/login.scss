@@ -1,38 +1,44 @@
+@use "../../App.scss" as *;
+
 .login {
     height: 100vh;
-    background-color: rgb(255, 202, 202);
+    background-color: #ff9d649e;
     display: flex;
     align-items: center;
     justify-content: center;
+
     .card {
         display: flex;
         width: 50%;
         min-height: 550px;
         border-radius: 10px;
         overflow: hidden;
+
         .left {
             flex: 1;
             padding: 2rem;
-            background: linear-gradient(rgba(138, 17, 17, 0.6), rgba(98, 52, 52, 0.6)), url(https://img.freepik.com/premium-photo/diverse-happy-people-united_53876-13079.jpg?ga=GA1.1.1504569961.1744768972&semt=ais_hybrid&w=740) center;
+            background: linear-gradient(#4b1e00b4, #f8a06644), url(https://img.freepik.com/premium-photo/diverse-happy-people-united_53876-13079.jpg?ga=GA1.1.1504569961.1744768972&semt=ais_hybrid&w=740) center;
             background-size: cover;
             display: flex;
             flex-direction: column;
             gap: 2rem;
             color: white;
             justify-content: center;
-            h1{
+
+            h1 {
                 font-size: 6rem;
                 line-height: 6rem;
             }
-            p{}
-            span{
+
+            span {
                 font-size: 14px;
             }
-            button{
+
+            button {
                 width: 50%;
                 padding: 0.5rem;
                 border: none;
-                color: rgb(192, 70, 70);
+                color: #f86300;
                 font-weight: bold;
                 cursor: pointer;
                 background-color: white;
@@ -47,22 +53,37 @@
             flex-direction: column;
             gap: 2rem;
             justify-content: center;
-            h1{
+
+            h1 {
                 color: #555;
             }
-            form{
+
+            select {
+                padding: 10px;
+                border-radius: 5px;
+                border: 1px solid #555;
+
+                &:focus {
+                    border-color: themed("logo");
+                    box-shadow: 0 0 0 2px rgba(247, 122, 19, 0.2);
+                }
+            }
+
+            form {
                 display: flex;
                 flex-direction: column;
                 gap: 2rem;
-                input{
+
+                input {
                     border: none;
                     border-bottom: 1px solid lightgray;
                     padding: 10px 20px;
                 }
-                button{
+
+                button {
                     width: 50%;
                     padding: 0.5rem;
-                    background-color: rgb(255, 155, 155);
+                    background-color: #ff8737;
                     color: white;
                     font-weight: bold;
                     cursor: pointer;
