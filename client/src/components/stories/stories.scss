@@ -5,10 +5,10 @@
     gap: 1rem;
     margin-bottom: 2rem;
     height: 100px;
-    width: 740px;
+    width: 50vw;
     padding: 0 10px;
     overflow-x: auto;
-    border-radius: 20px;
+    // border-radius: 20px;
 
     scrollbar-width: none; // For Firefox
     &::-webkit-scrollbar {
@@ -18,12 +18,13 @@
 
     @include mobile {
         height: 50px;
+        width: 90vw;
         justify-content: space-around;
     }
 
     @include tablet {
         gap: 20px;
-        width: 60vh;
+        width: 90vh;
     }
 
     .story {
@@ -33,9 +34,6 @@
         position: relative;
         height: 100px;
         width: 100px;
-        // background-color: #f77a13;
-        
-        // border-radius: 50%;
 
         @include mobile {
             flex: none;

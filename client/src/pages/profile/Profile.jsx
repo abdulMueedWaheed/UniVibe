@@ -153,43 +153,47 @@ const Profile = () => {
       </div>
       <div className="profileContainer">
         <div className="uInfo">
-          <div className="left">
-            <a href="http://facebook.com">
-              <FacebookTwoToneIcon fontSize="large" />
-            </a>
-            <a href="http://instagram.com">
-              <InstagramIcon fontSize="large" />
-            </a>
-            <a href="http://twitter.com">
-              <TwitterIcon fontSize="large" />
-            </a>
-            <a href="http://linkedin.com">
-              <LinkedInIcon fontSize="large" />
-            </a>
-            <a href="http://pinterest.com">
-              <PinterestIcon fontSize="large" />
-            </a>
-          </div>
-          <div className="center">
-            <span>{userData.full_name}</span>
-            <div className="info">
-              <div className="item">
-                <PlaceIcon />
-                <span>{userData.location}</span>
-              </div>
-              <div className="item">
-                <LanguageIcon />
-                <span>{userData.website}</span>
-              </div>
+
+          <span>Nust Stray Animals Society</span>
+          <div className="bottom">
+            <div className="left">
+              <a href="http://facebook.com">
+                <FacebookTwoToneIcon />
+              </a>
+              <a href="http://facebook.com">
+                <InstagramIcon style={{fontSize:"30px"}}  />
+              </a>
+              <a href="http://facebook.com">
+                <TwitterIcon style={{fontSize:"30px"}} />
+              </a>
+              <a href="http://facebook.com">
+                <LinkedInIcon style={{fontSize:"30px"}} />
+              </a>
+              <a href="http://facebook.com">
+                <PinterestIcon style={{fontSize:"30px"}} />
+              </a>
             </div>
-            <button>follow</button>
-          </div>
-          <div className="right">
-            <EmailOutlinedIcon />
-            <MoreVertIcon />
-            <button onClick={handleOpenModal}>Create Post</button>
+            <div className="center">
+              <div className="info">
+                <div className="item">
+                  <PlaceIcon />
+                  <span>USA</span>
+                </div>
+                <div className="item">
+                  <LanguageIcon />
+                  <span>lama.dev</span>
+                </div>
+              </div>
+              <button>follow</button>
+            </div>
+            <div className="right">
+              <EmailOutlinedIcon />
+              <MoreVertIcon />
+              <button onClick={handleOpenModal}>Create Post</button>
+            </div>
           </div>
         </div>
+        {/* <Posts/> */}
       </div>
 
       <div className="postsContainer">

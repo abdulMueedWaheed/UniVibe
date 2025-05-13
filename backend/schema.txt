@@ -285,4 +285,3 @@ CREATE TABLE channel_members (
 );
 
 CREATE INDEX idx_channel_members_channel ON channel_members(channel_id);
-

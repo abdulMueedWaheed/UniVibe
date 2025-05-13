@@ -1,80 +1,87 @@
 @use "../../App.scss" as *;
 
 .navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 8vh;
+  padding: 10px 20px;
+  border-bottom: 1px solid themed("border");
+  position: sticky;
+  top: 0;
+  background-color: themed("bg");
+  z-index: 999;
+  color: themed("textColor");
+  width: 100vw;
+  
+
+  @include mobile {
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  .left {
+    gap: 1.5rem;
     display: flex;
-    justify-content: space-between;
     align-items: center;
-    height: 8vh;
-    padding: 10px 20px;
-    border-bottom: 1px solid themed("border");
-    position: sticky;
-    top: 0;
-    background-color: themed("bg");
-    z-index: 999;
-    color: themed("textColor");
 
-    .left {
-      gap: 1.5rem;
-      display: flex;
-      align-items: center;
-
-      span {
-        font-size: larger;
-        font-weight: bold;
-        color: themed("logo");
-      }
-
-      .search {
-        display: flex;
-        align-items: center;
-        border: 1px solid themed("border");
-        border-radius: 5px;
-        padding: 5px;
-
-        input {
-          padding-left: 5px;
-          border: none;
-          width: 500px;
-          outline: none;
-          background-color: transparent;
-          color: themed("textColor");
-
-          @include mobile{
-            display: none;
-          }
-
-          @include tablet {
-            width: 200px;
-          }
-        }
-      }
+    span {
+      font-size: larger;
+      font-weight: bold;
+      color: themed("logo");
     }
 
-    .right {
+    .search {
       display: flex;
-      gap: 1.5rem;
       align-items: center;
+      border: 1px solid themed("border");
+      border-radius: 5px;
+      padding: 5px;
 
-      @include mobile {
-        display: none;
-      }
+      input {
+        padding-left: 5px;
+        border: none;
+        width: 500px;
+        outline: none;
+        background-color: transparent;
+        color: themed("textColor");
 
-      .user {
-        display: flex;
-        align-items: center;
-        gap: 0.5rem;
-        font-weight: 500;
-
-        @include tablet {
+        @include mobile {
           display: none;
         }
 
-        img {
-          max-height: 35px;
-          max-width: 35px;
-          border-radius: 50%;
-          object-fit: cov er;
+        @include tablet {
+          width: 200px;
         }
       }
+    }
+  }
+
+  .right {
+    display: flex;
+    gap: 1.5rem;
+    align-items: center;
+
+    @include mobile {
+      display: none;
+    }
+
+    .user {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-weight: 500;
+
+      @include tablet {
+        display: none;
+      }
+
+      img {
+        max-height: 35px;
+        max-width: 35px;
+        border-radius: 50%;
+        object-fit: cov er;
+      }
+    }
   }
 }

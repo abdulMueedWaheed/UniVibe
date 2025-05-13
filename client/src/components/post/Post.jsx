@@ -80,7 +80,27 @@ const Post = ({ post }) => {
           )}
         </div>
 
-        {/* Rest of your component remains the same */}
+        <div className="interaction">
+          <div className="item">
+            {liked ? <FavoriteOutlinedIcon /> : <FavoriteBorderOutlinedIcon />}
+            <span>
+              12 Likes
+            </span>
+          </div>
+          <div className="item" onClick={() => setCommentsOpen(!commentsOpen)}>
+            <ChatBubbleOutlineOutlinedIcon />
+            <span>
+              12 Comments
+            </span>
+          </div>
+          <div className="item">
+            <ShareIcon />
+            <span>
+              Share
+            </span>
+          </div>
+        </div>
+        {commentsOpen && <Comments />}
       </div>
     </div>
   );
