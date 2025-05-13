@@ -169,9 +169,7 @@ const Profile = () => {
         <label htmlFor="profilePicInput">
           <img
             src={
-              profilePic ||
-              "https://images.pexels.com/photos/14028501/pexels-photo-14028501.jpeg?auto=compress&cs=tinysrgb&w=1600&lazy=load"
-            }
+              profilePic }
             alt="Profile"
             className="profilePic"
           />
@@ -222,9 +220,6 @@ const Profile = () => {
             <div className="right">
               <EmailOutlinedIcon />
               <MoreVertIcon />
-              {isOwnProfile && (
-                <button onClick={handleOpenModal}>Create Post</button>
-              )}
             </div>
           </div>
         </div>

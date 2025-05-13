@@ -13,6 +13,7 @@ import { useContext } from 'react'
 import { DarkModeContext } from './context/DarkModeContext'
 import { AuthContext } from "./context/AuthContext"
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
+import Societies from './pages/societies/Societies'
 
 function App() {
 
@@ -39,11 +40,11 @@ function App() {
   }
 
   // EVENTS LAYOUT  
-  const EventsLayout = () => {
+  const SecondaryLayout = () => {
     return (
       <div className={`${darkMode ? 'dark' : 'light'}-theme`}>
-        <Navbar />
-        <Events />
+        <Navbar/>
+        <Outlet/>
       </div>
     )
   }
@@ -66,7 +67,10 @@ function App() {
           <Route index element={<Home />} />
           <Route path='/profile/:userId' element={<Profile />} />
         </Route>
-        <Route path='/events' element={<ProtectedRoute><EventsLayout /></ProtectedRoute>} />
+        <Route element={<ProtectedRoute><SecondaryLayout /></ProtectedRoute>} >
+          <Route path='/events' element={<Events/>} />
+          <Route path='/societies' element={<Societies/>}/>
+        </Route>
       </Routes>
     </>
     

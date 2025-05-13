@@ -21,7 +21,7 @@
   }
 
   .left {
-    gap: 1.5rem;
+    gap: 1rem;
     display: flex;
     align-items: center;
 
@@ -30,6 +30,13 @@
       font-weight: bold;
       color: themed("logo");
     }
+    a {
+
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
 
     .search {
       display: flex;
@@ -67,21 +74,27 @@
     }
 
     .user {
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
       font-weight: 500;
 
-      @include tablet {
-        display: none;
+      a {
+        text-decoration: none;
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        color: themed("textColor");
+
+        @include tablet {
+          display: none;
+        }
+  
+        img {
+          max-height: 35px;
+          max-width: 35px;
+          border-radius: 50%;
+          object-fit: cov er;
+        }
       }
 
-      img {
-        max-height: 35px;
-        max-width: 35px;
-        border-radius: 50%;
-        object-fit: cov er;
-      }
     }
   }
 }

@@ -7,6 +7,7 @@ import { useQuery } from "@tanstack/react-query";
 
 const Stories = () => {
   const { currentUser } = useContext(AuthContext);
+  const [profilePic, setProfilePic] = useState("");
 
   // Fetch users from the database to use as stories
   const { isLoading, error, data: users } = useQuery({
@@ -24,13 +25,33 @@ const Stories = () => {
     }
   });
 
+  useEffect(() => {
+    const fetchProfilePic = async () => {
+      try {
+        console.log("Fetching user data for ID:", currentUser.id);
+        const res = await makeRequest.get(`/users/${currentUser.id}`);
+        console.log("User data response:", res.data);
+
+        if (res.data && res.data.data) {
+          const user = res.data.data;
+          setProfilePic(user.profile_pic || "");
+        }
+      }
+      catch (error) {
+        console.error("Error fetching user data:", error);
+      }
+    };
+
+    fetchProfilePic();
+  }, [])
+
   return (
     <div className='stories'>
       <div className="story">
-        <img src={currentUser.profile_pic || "https://i.pinimg.com/736x/64/e8/00/64e80093aa9e4e2bc3ff5aba88bc22f4.jpg"} />
+        <img src={profilePic || "https://i.pinimg.com/736x/64/e8/00/64e80093aa9e4e2bc3ff5aba88bc22f4.jpg"} />
         <button id="add-story-btn">+</button>
       </div>
-      
+
       {isLoading ? (
         // Show placeholder stories while loading
         Array(3).fill(0).map((_, i) => (
@@ -45,11 +66,10 @@ const Stories = () => {
         users.filter(user => user.id !== currentUser.id).map(user => (
           <div className="story" key={user.id}>
             <Link to={`/profile/${user.id}`}>
-              <img 
-                src={user.profile_pic || "https://i.pinimg.com/736x/64/e8/00/64e80093aa9e4e2bc3ff5aba88bc22f4.jpg"} 
-                alt={user.full_name} 
+              <img
+                src={user.profile_pic || "https://i.pinimg.com/736x/64/e8/00/64e80093aa9e4e2bc3ff5aba88bc22f4.jpg"}
+                alt={user.full_name}
               />
-              <span>{user.full_name}</span>
             </Link>
           </div>
         ))

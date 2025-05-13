@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import Event from "../../components/event/Event";
 import "./events.scss";
 
@@ -165,7 +165,7 @@ const Events = () => {
 
                 <div className="event-list">
                     {events.filter(event => (
-                        search.trim() === '' || event.name.toLowerCase().includes(search)
+                        search.trim() === '' || event.name.toLowerCase().includes(search.toLowerCase())
                     )).filter(event => (
                         tag === "none" || event.tags.some(tagItem => tagItem === tag)
                     )).sort((a,b) => {

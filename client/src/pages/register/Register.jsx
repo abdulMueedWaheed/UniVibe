@@ -1,11 +1,12 @@
 import React from 'react'
 import './register.scss'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { useState } from 'react'
 import axios from "axios"
 
 const Register = () => {
     const [err, setErr] = useState(null);
+    const navigate = useNavigate();
 
     const [inputs, setInputs] = useState({
         user_name: "", // Updated to match the backend key
@@ -26,6 +27,8 @@ const Register = () => {
         try {
             await axios.post("http://localhost:5000/api/auth/register", inputs);
             console.log("User registered successfully");
+            //navigate to login
+            navigate("/login");
         } catch (error) {
             setErr(error.response.data);
             console.error("Error during registration:", error);
