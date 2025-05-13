@@ -60,6 +60,7 @@ const Navbar = () => {
         {/* <EmailOutlinedIcon sx={{ cursor: 'pointer' }}/> */}
         <NotificationsOutlinedIcon sx={{ cursor: 'pointer' }} />
         <div className="user">
+
           <Link to={`/profile/${currentUser.id}`}>
             <img src={profilePic || null} alt="Profile Pic" style={{border: "2px solid black"}}  />
             <span>{currentUser.full_name}</span>
@@ -69,5 +70,4 @@ const Navbar = () => {
     </div>
   )
 }
-
 export default Navbar
