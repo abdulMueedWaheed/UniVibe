@@ -8,6 +8,7 @@ import userRoutes from './routes/user_routes.js';
 import authRoutes from './routes/auth_routes.js';
 import postRoutes from './routes/post_routes.js';
 import commentRoutes from './routes/comment_routes.js';
+import likeRoutes from "./routes/like_routes.js";
 
 dotenv.config();
 const app = express();
@@ -29,6 +30,7 @@ app.use('/api/users', userRoutes);
 app.use('/api/auth', authRoutes);
 app.use('/api/posts', postRoutes);
 app.use('/api/comments', commentRoutes);
+app.use('/api/likes', likeRoutes);
 
 app.get('/', (req, res) => res.send('Backend is running!'));
 
