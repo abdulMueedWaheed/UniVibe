@@ -137,9 +137,7 @@ const Profile = () => {
         <label htmlFor="profilePicInput">
           <img
             src={
-              profilePic ||
-              "https://images.pexels.com/photos/14028501/pexels-photo-14028501.jpeg?auto=compress&cs=tinysrgb&w=1600&lazy=load"
-            }
+              profilePic }
             alt="Profile"
             className="profilePic"
           />
@@ -154,7 +152,7 @@ const Profile = () => {
       <div className="profileContainer">
         <div className="uInfo">
 
-          <span>Nust Stray Animals Society</span>
+          <span>{userData.full_name}</span>
           <div className="bottom">
             <div className="left">
               <a href="http://facebook.com">
@@ -177,11 +175,11 @@ const Profile = () => {
               <div className="info">
                 <div className="item">
                   <PlaceIcon />
-                  <span>USA</span>
+                  <span>{userData.location}</span>
                 </div>
                 <div className="item">
                   <LanguageIcon />
-                  <span>lama.dev</span>
+                  <span><a href="https://adeel-hassan-portfolio.vercel.app/">Portfolio Website</a></span>
                 </div>
               </div>
               <button>follow</button>

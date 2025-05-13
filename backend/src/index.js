@@ -7,6 +7,7 @@ import supabase from './config/supabaseClient.js';
 import userRoutes from './routes/user_routes.js';
 import authRoutes from './routes/auth_routes.js';
 import postRoutes from './routes/post_routes.js';
+import commentRoutes from './routes/comment_routes.js';
 
 dotenv.config();
 const app = express();
@@ -27,6 +28,7 @@ app.use(cookieParser());
 app.use('/api/users', userRoutes);
 app.use('/api/auth', authRoutes);
 app.use('/api/posts', postRoutes);
+app.use('/api/comments', commentRoutes);
 
 app.get('/', (req, res) => res.send('Backend is running!'));
 

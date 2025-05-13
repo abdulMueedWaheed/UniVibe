@@ -57,10 +57,17 @@ const Post = ({ post }) => {
                 src={post.image_url} 
                 alt="Post image" 
                 onError={(e) => {
-                  console.error("Image failed to load:", post.image_url);
+                  console.error("Image failed to load:", {
+                    url: post.image_url,
+                    error: e.target.error,
+                    status: e.target.naturalWidth === 0 ? "Failed to load" : "Loaded but invalid"
+                  });
                   e.target.onerror = null; 
-                  e.target.src = "https://via.placeholder.com/400?text=Image+Not+Available";
-                }} 
+                  e.target.src = {profileImage} ;
+                }}
+                onLoad={() => {
+                  console.log("Image loaded successfully:", post.image_url);
+                }}
               />
             </div>
           )}
@@ -69,7 +76,7 @@ const Post = ({ post }) => {
               <video 
                 controls 
                 width="100%" 
-                onError={(e) => {
+                onError={() => {
                   console.error("Video failed to load:", post.video_url);
                 }}
               >
@@ -84,13 +91,13 @@ const Post = ({ post }) => {
           <div className="item">
             {liked ? <FavoriteOutlinedIcon /> : <FavoriteBorderOutlinedIcon />}
             <span>
-              12 Likes
+               Likes
             </span>
           </div>
           <div className="item" onClick={() => setCommentsOpen(!commentsOpen)}>
             <ChatBubbleOutlineOutlinedIcon />
             <span>
-              12 Comments
+              Comments
             </span>
           </div>
           <div className="item">
@@ -100,7 +107,7 @@ const Post = ({ post }) => {
             </span>
           </div>
         </div>
-        {commentsOpen && <Comments />}
+        {commentsOpen && <Comments postsID={post.id} />}
       </div>
     </div>
   );
