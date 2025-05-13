@@ -25,81 +25,66 @@ const Leftbar = () => {
               Explore
             </Button>
           </div>
+          <hr></hr>
           <div className="item">
-          <Link>
-            <EmojiPeopleOutlinedIcon />
-            <span>Friends</span>
-          </Link>
+            <Link>
+              <EmojiPeopleOutlinedIcon />
+              <span>Friends</span>
+            </Link>
           </div>
           <div className="item">
-          <Link>
-            <Groups2OutlinedIcon />
-            <span>Groups</span>
-          </Link>
+            <Link>
+              <Diversity2OutlinedIcon />
+              <span>Societies</span>
+            </Link>
           </div>
-          <div className="item">
-          <Link>
-            <Diversity2OutlinedIcon />
-            <span>Societies</span>
-          </Link>
-          </div>
-          <div className="item">
-          <Link>
-            <PlayCircleOutlinedIcon />
-            <span>Watch</span>
-          </Link>
-          </div>
-          <hr />
-        </div>
-        <div className="menu">
-          <span>Shortcuts</span>
           <div className="item">
             <Link to="/events">
               <EventIcon />
               <span>Events</span>
             </Link>
           </div>
-          <div className="item">
-            <Link>
-            <GamesOutlinedIcon />
-            <span>Gaming</span>
-            </Link>
-          </div>
-          <div className="item">
-          <Link>
-            <InsertPhotoOutlinedIcon />
-            <span>Gallery</span>
-          </Link>
-          </div>
-          <div className="item">
-          <Link>
-            <OndemandVideoOutlinedIcon />
-            <span>Videos</span>
-          </Link>
-          </div>
-          <div className="item">
-          <Link>
-            <ChatBubbleOutlineOutlinedIcon />
-            <span>Messages</span>
-          </Link>
-          </div>
           <hr />
         </div>
         <div className="menu">
-          <span>Others</span>
+          <span>Coming Soon...</span>
           <div className="item">
-          <Link>
-            <QuestionMarkOutlinedIcon />
-            <span>Fundraiser</span>
-          </Link>
+            <Link>
+              <PlayCircleOutlinedIcon />
+              <span>Watch</span>
+            </Link>
           </div>
           <div className="item">
-          <Link>
-            <QuestionMarkOutlinedIcon />
-            <span>Tutorials</span>
-          </Link>
+            <Link>
+              <Groups2OutlinedIcon />
+              <span>Groups</span>
+            </Link>
           </div>
-
+          <div className="item">
+            <Link>
+              <GamesOutlinedIcon />
+              <span>Gaming</span>
+            </Link>
+          </div>
+          <div className="item">
+            <Link>
+              <InsertPhotoOutlinedIcon />
+              <span>Gallery</span>
+            </Link>
+          </div>
+          <div className="item">
+            <Link>
+              <OndemandVideoOutlinedIcon />
+              <span>Videos</span>
+            </Link>
+          </div>
+          <div className="item">
+            <Link>
+              <ChatBubbleOutlineOutlinedIcon />
+              <span>Messages</span>
+            </Link>
+          </div>
+          {/* <hr /> */}
         </div>
       </div>
     </div>

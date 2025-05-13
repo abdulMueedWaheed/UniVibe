@@ -47,7 +47,7 @@ const Navbar = () => {
         </Link>
 
         {(darkMode === false) ? <DarkModeOutlinedIcon onClick={toggle} sx={{ cursor: 'pointer' }} /> : <LightModeOutlinedIcon sx={{ cursor: 'pointer' }} onClick={toggle} />}
-        <GridViewOutlinedIcon sx={{ cursor: 'pointer' }} />
+        {/* <GridViewOutlinedIcon sx={{ cursor: 'pointer' }} /> */}
 
         <div className="search">
           <SearchOulintedIcon />
