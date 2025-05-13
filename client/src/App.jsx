@@ -16,9 +16,12 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 
 function App() {
 
+  const {currentUser} = useContext(AuthContext);
+  const {darkMode} = useContext(DarkModeContext);
+
   const queryClient = new QueryClient();
 
-  const Layout = () => {
+  const HomeLayout = () => {
     return (
       <QueryClientProvider client={queryClient}>
         <div className={`${darkMode? 'dark' : 'light'}-theme`}>

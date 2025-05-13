@@ -43,9 +43,7 @@
       padding: 0px;
     }
 
-    @include tablet {
-
-    }
+    @include tablet {}
 
     .uInfo {
       height: 50%;
@@ -90,7 +88,7 @@
           flex: 1;
           display: flex;
           gap: 10px;
-          
+
           @include tablet {
             flex-wrap: wrap;
           }
@@ -99,7 +97,7 @@
             width: 100%;
             justify-content: center;
           }
-          
+
           a {
             color: themed("textColorSoft");
           }
@@ -160,11 +158,13 @@
             left: 0;
             width: 100vw;
             height: 100vh;
-            background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
+            background-color: rgba(0, 0, 0, 0.5);
+            /* Semi-transparent background */
             display: flex;
             justify-content: center;
             align-items: center;
-            z-index: 1000; /* Ensure it appears above other elements */
+            z-index: 1000;
+            /* Ensure it appears above other elements */
           }
 
           .modalContent {
@@ -189,15 +189,16 @@
 
           .closeButton:hover {
             color: red;
-            
-          @include mobile {
-            justify-content: space-between;
-            width: 100%;
+
+            @include mobile {
+              justify-content: space-between;
+              width: 100%;
+            }
           }
+
         }
 
       }
-
     }
   }
 }
