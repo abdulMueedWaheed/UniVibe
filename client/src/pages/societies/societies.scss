@@ -1,0 +1,236 @@
+@use "../../App.scss" as *;
+
+.societies {
+    padding: 20px;
+    background-color: themed("bgSoft");
+    color: themed("textColor");
+    min-height: 92vh;
+    
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    
+    .filter-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 30px;
+      background-color: themed("bg");
+      padding: 15px;
+      border-radius: 10px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      
+      .search-bar {
+        display: flex;
+        gap: 10px;
+        
+        input {
+          padding: 10px;
+          width: 300px;
+          border: 1px solid themed("border");
+          border-radius: 5px;
+          outline: none;
+          background-color: themed("bg");
+          color: themed("textColor");
+          
+          &:focus {
+            border-color: themed("logo");
+            box-shadow: 0 0 0 2px rgba(247, 122, 19, 0.2);
+          }
+          
+          &:hover {
+            border-color: themed("logo");
+          }
+        }
+        
+        button {
+          padding: 10px 20px;
+          background-color: themed("logo");
+          color: white;
+          border: none;
+          border-radius: 5px;
+          cursor: pointer;
+          transition: background-color 0.3s;
+          
+          &:hover {
+            background-color: adjust-hue($color: #f77a13, $degrees: -8);
+          }
+        }
+      }
+      
+      .filter-dropdown {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        
+        select {
+          padding: 8px;
+          border: 1px solid themed("border");
+          border-radius: 5px;
+          outline: none;
+          cursor: pointer;
+          background-color: themed("bg");
+          color: themed("textColorSoft");
+          
+          &:hover {
+            border-color: themed("logo");
+          }
+          
+          &:focus {
+            border-color: themed("logo");
+            box-shadow: 0 0 0 2px rgba(247, 122, 19, 0.2);
+          }
+          
+          option {
+            background-color: themed("bg");
+            color: themed("textColor");
+          }
+        }
+      }
+    }
+    
+    .societies-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+      gap: 25px;
+      
+      .society-card {
+        background-color: themed("bg");
+        border-radius: 10px;
+        overflow: hidden;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        transition: transform 0.3s, box-shadow 0.3s;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        
+        &:hover {
+          transform: translateY(-5px);
+          box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+        }
+        
+        .logo {
+          height: 180px;
+          overflow: hidden;
+          
+          img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s;
+            
+            &:hover {
+              transform: scale(1.05);
+            }
+          }
+        }
+        
+        .info {
+          padding: 20px;
+          display: flex;
+          flex-direction: column;
+          flex-grow: 1;
+          
+          h3 {
+            margin: 0 0 10px 0;
+            font-size: 1.5rem;
+            color: themed("textColor");
+          }
+          
+          .description {
+            margin-bottom: 15px;
+            color: themed("textColorSoft");
+            line-height: 1.5;
+            flex-grow: 1;
+          }
+          
+          .details {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 15px;
+            
+            span {
+              background-color: themed("bgSoft");
+              padding: 5px 10px;
+              border-radius: 15px;
+              font-size: 0.8rem;
+              color: themed("textColorSoft");
+            }
+          }
+          
+          .contact {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: auto;
+            
+            .contact-btn {
+              background-color: themed("logo");
+              color: white;
+              padding: 8px 15px;
+              border-radius: 5px;
+              text-decoration: none;
+              font-weight: 500;
+              transition: background-color 0.3s;
+              
+              &:hover {
+                background-color: adjust-hue($color: #f77a13, $degrees: -8);
+              }
+            }
+            
+            .social {
+              display: flex;
+              gap: 15px;
+              
+              a {
+                color: themed("textColorSoft");
+                font-size: 1.2rem;
+                transition: color 0.3s;
+                
+                &:hover {
+                  color: themed("logo");
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+  
+  // Responsive styling
+  @media (max-width: 768px) {
+    .societies {
+      .filter-bar {
+        flex-direction: column;
+        gap: 15px;
+        
+        .search-bar {
+          width: 100%;
+          
+          input {
+            width: 100%;
+          }
+        }
+        
+        .filter-dropdown {
+          width: 100%;
+          justify-content: space-between;
+        }
+      }
+      
+      .societies-grid {
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      }
+    }
+  }
+  
+  @media (max-width: 480px) {
+    .societies {
+      .societies-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  }

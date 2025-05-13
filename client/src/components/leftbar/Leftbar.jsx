@@ -33,7 +33,7 @@ const Leftbar = () => {
             </Link>
           </div>
           <div className="item">
-            <Link>
+            <Link to="/societies">
               <Diversity2OutlinedIcon />
               <span>Societies</span>
             </Link>
