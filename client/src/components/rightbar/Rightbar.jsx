@@ -8,9 +8,7 @@ import { societies } from '../../data/societiesData'
 // import DeleteIcon from '@mui/icons-material/Delete';
 
 const Rightbar = () => {
-  
-
-  return (
+return (
     <div className='rightbar'>
       <div className="container">
         <div className="item">
@@ -18,11 +16,11 @@ const Rightbar = () => {
             <span>Suggestions For You</span>
             <Link><span>Show All</span></Link>
           </div>
-          {societies.map(society => (
+          {societies.slice(0, 4).map(society => (
             <div className="entity" key={society.id}>
               <div className="entity-info">
                 <Link to={`/profile/${society.id}`}>
-                  <img src={society.img} alt={society.name} />
+                  <img src={society.logo} alt={society.name} />
                   <span>{society.name}</span>
                 </Link>
               </div>
