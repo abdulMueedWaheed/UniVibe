@@ -13,7 +13,7 @@ const Society = ({ society }) => {
           <span className="founding">Founded: {society.founding_date}</span>
         </div>
         <div className="contact">
-          <a href={`mailto:${society.contact_email}`} className="contact-btn">Contact</a>
+          {/* <a href={`mailto:${society.contact_email}`} className="contact-btn">Contact</a> */}
           <div className="social">
             {society.social_media.instagram &&
               <a href={`https://instagram.com/${society.social_media.instagram}`} target="_blank" rel="noopener noreferrer">
