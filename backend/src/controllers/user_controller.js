@@ -172,3 +172,43 @@ export const getUsersForStories = async(req, res) => {
       });
   }
 };
+
+// gett all the users based on query
+export const searchUsers = async (req, res) => {
+  try {
+    const { q } = req.query; // Get the search query from request
+    
+    if (!q || q.length < 2) {
+      return res.status(400).json({
+        success: false,
+        message: "Search query must be at least 2 characters"
+      });
+    }
+    
+    console.log(`Searching for users with query: ${q}`);
+    
+    // Search in both user_name and full_name fields
+    const { data, error } = await supabase
+      .from('users')
+      .select('id, user_name, full_name, profile_pic')
+      .or(`user_name.ilike.%${q}%,full_name.ilike.%${q}%`)
+      .limit(10); // Limit to 10 results
+    
+    if (error) {
+      console.error("Error searching users:", error);
+      throw error;
+    }
+    
+    return res.status(200).json({
+      success: true,
+      data
+    });
+  }
+  catch (error) {
+    console.error("Error in search users:", error);
+    return res.status(500).json({
+      success: false,
+      message: error.message
+    });
+  }
+};

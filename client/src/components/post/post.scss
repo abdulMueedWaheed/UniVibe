@@ -58,6 +58,7 @@
           min-width: 120px;
           
           .option-item {
+            color: themed("textColor");
             display: flex;
             align-items: center;
             gap: 8px;

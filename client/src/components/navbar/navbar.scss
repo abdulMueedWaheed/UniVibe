@@ -2,63 +2,120 @@
 
 .navbar {
   display: flex;
-  justify-content: space-between;
   align-items: center;
-  height: 8vh;
+  justify-content: space-between;
   padding: 10px 20px;
+  height: 50px;
   border-bottom: 1px solid themed("border");
   position: sticky;
   top: 0;
   background-color: themed("bg");
-  z-index: 999;
   color: themed("textColor");
-  width: 100vw;
-  
-
-  @include mobile {
-    width: 100%;
-    box-sizing: border-box;
-  }
+  z-index: 999;
 
   .left {
-    gap: 1rem;
     display: flex;
     align-items: center;
+    gap: 30px;
 
-    span {
-      font-size: larger;
+    .logo {
       font-weight: bold;
+      font-size: 20px;
       color: themed("logo");
     }
-    a {
-
-      display: flex;
-      align-items: center;
-      gap: 1rem;
-    }
-
 
     .search {
       display: flex;
       align-items: center;
+      gap: 10px;
       border: 1px solid themed("border");
       border-radius: 5px;
       padding: 5px;
+      position: relative;
 
       input {
-        padding-left: 5px;
         border: none;
         width: 500px;
-        outline: none;
         background-color: transparent;
         color: themed("textColor");
+        outline: none;
 
-        @include mobile {
-          display: none;
+        &::placeholder {
+          color: themed("textColorSoft");
+        }
+      }
+
+      .clear-search {
+        cursor: pointer;
+        font-size: 18px;
+        color: themed("textColorSoft");
+        
+        &:hover {
+          color: themed("textColor");
+        }
+      }
+
+      .search-results {
+        position: absolute;
+        top: 100%;
+        left: 0;
+        width: 100%;
+        max-height: 300px;
+        overflow-y: auto;
+        background-color: themed("bg");
+        border: 1px solid themed("border");
+        border-radius: 0 0 5px 5px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        z-index: 999;
+        margin-top: 5px;
+        
+        .search-result-item {
+          display: flex;
+          align-items: center;
+          padding: 10px;
+          cursor: pointer;
+          transition: background-color 0.2s;
+          
+          &:hover {
+            background-color: themed("bgSoft");
+          }
+          
+          img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-right: 10px;
+            border: 1px solid themed("border");
+          }
+          
+          .user-info {
+            display: flex;
+            flex-direction: column;
+            
+            .name {
+              font-weight: 500;
+              color: themed("textColor");
+              margin-bottom: 2px;
+            }
+            
+            .username {
+              font-size: 12px;
+              color: themed("textColorSoft");
+            }
+          }
         }
 
-        @include tablet {
-          width: 200px;
+        .no-results {
+          padding: 15px;
+          text-align: center;
+          color: themed("textColorSoft");
+        }
+
+        .search-loading {
+          padding: 15px;
+          text-align: center;
+          color: themed("textColorSoft");
         }
       }
     }
@@ -66,35 +123,45 @@
 
   .right {
     display: flex;
-    gap: 1.5rem;
     align-items: center;
-
-    @include mobile {
-      display: none;
-    }
+    gap: 20px;
 
     .user {
+      display: flex;
+      align-items: center;
+      gap: 10px;
       font-weight: 500;
-
+      
       a {
-        text-decoration: none;
         display: flex;
         align-items: center;
-        gap: 1rem;
+        gap: 10px;
+        text-decoration: none;
         color: themed("textColor");
-
-        @include tablet {
-          display: none;
-        }
-  
-        img {
-          max-height: 35px;
-          max-width: 35px;
-          border-radius: 50%;
-          object-fit: cov er;
-        }
       }
 
+      img {
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+        object-fit: cover;
+      }
+    }
+  }
+
+  @media (max-width: 960px) {
+    .left {
+      .search {
+        input {
+          width: 200px;
+        }
+      }
+    }
+  }
+
+  @media (max-width: 640px) {
+    .left {
+      gap: 15px;
     }
   }
 }
