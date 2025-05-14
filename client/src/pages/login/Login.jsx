@@ -55,8 +55,7 @@ const Login = () => {
         <div className="left">
           <h1>Uni Vibe.</h1>
           <p>
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Fugit, cum
-            voluptas? Incidunt iusto ipsum nesciunt repellendus tenetur.
+            Connect with your university community and stay updated on the latest events, news, and opportunities.
           </p>
           <span>Don't have an account? </span>
           <Link to="/register">

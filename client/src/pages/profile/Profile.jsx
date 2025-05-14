@@ -11,12 +11,11 @@ import MoreVertIcon from "@mui/icons-material/MoreVert";
 import Posts from "../../components/posts/Posts";
 import CreatePostModal from "../../components/createPostModal/createPostModal";
 import { useState, useEffect } from "react";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { makeRequest } from "../../axios.js";
 import { useContext } from "react";
 import { AuthContext } from "../../context/AuthContext";
-import { useParams } from "react-router-dom";  // Add this import
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useParams } from "react-router-dom";
 import { Link } from "react-router-dom";
 
 const Profile = () => {
@@ -29,10 +28,9 @@ const Profile = () => {
   const [userData, setUserData] = useState({
     full_name: "Loading...",
     location: "Location not set",
-    website: "Website not set"
+    website: "Website not set",
   });
 
-  // Use the URL userId if available, otherwise use currentUser.id
   const profileUserId = userId || currentUser?.id?.toString();
 
   // Fetch profile user data
@@ -46,7 +44,7 @@ const Profile = () => {
             setUserData({
               full_name: user.full_name || "User",
               location: user.location || "Location not set",
-              website: user.website || "Website not set"
+              website: user.website || "Website not set",
             });
             setCoverPic(user.cover_pic || "");
             setProfilePic(user.profile_pic || "");
@@ -59,15 +57,15 @@ const Profile = () => {
     fetchUserData();
   }, [profileUserId]);
 
-  // Follow/Unfollow functionality
+  // Fetch relationship data
   const { data: relationshipData } = useQuery({
     queryKey: ["relationship", userId],
     queryFn: async () => {
       const response = await makeRequest.get("/relationships", {
-        params: { followerUserId: currentUser.id }
+        params: { followerUserId: currentUser.id },
       });
       return response.data;
-    }
+    },
   });
 
   // Fetch the user's posts
@@ -85,25 +83,50 @@ const Profile = () => {
     enabled: !!profileUserId,
   });
 
+  // Optimistic update for follow/unfollow
   const mutation = useMutation({
     mutationFn: async (following) => {
       if (following) {
-        await makeRequest.delete("/relationships", {
-          params: { userId: profileUserId }
+        return await makeRequest.delete("/relationships", {
+          params: { userId: profileUserId },
         });
       } else {
-        await makeRequest.post("/relationships", { userId: profileUserId });
+        return await makeRequest.post("/relationships", { userId: profileUserId });
       }
     },
-    onSuccess: () => {
+    onMutate: async (following) => {
+      // Cancel any outgoing refetches to avoid overwriting optimistic update
+      await queryClient.cancelQueries(["relationship"]);
+
+      // Snapshot the previous value
+      const previousRelationship = queryClient.getQueryData(["relationship", userId]);
+
+      // Optimistically update the relationship data
+      queryClient.setQueryData(["relationship", userId], (old) => {
+        if (following) {
+          // Remove the userId from the array (unfollow)
+          return old.filter((id) => id !== Number(profileUserId));
+        } else {
+          // Add the userId to the array (follow)
+          return [...(old || []), Number(profileUserId)];
+        }
+      });
+
+      // Return the previous state in case of rollback
+      return { previousRelationship };
+    },
+    onError: (err, following, context) => {
+      // If the mutation fails, revert to the previous state
+      queryClient.setQueryData(["relationship", userId], context.previousRelationship);
+      console.error("Error following/unfollowing:", err);
+    },
+    onSettled: () => {
+      // Invalidate the query to refetch the actual data after the mutation
       queryClient.invalidateQueries(["relationship"]);
-    }
+    },
   });
-  console.log("relationshipData from profile.jsx line 102", {userId, currentUser});
 
-  // Determine if the profile belongs to the current user
-  const isOwnProfile = currentUser?.id && (profileUserId === currentUser.id.toString());
-
+  const isOwnProfile = currentUser?.id && profileUserId === currentUser.id.toString();
   const isFollowing = relationshipData?.includes(Number(profileUserId));
 
   const handleFollow = () => {
@@ -150,7 +173,6 @@ const Profile = () => {
     }
   };
 
-
   if (isLoading) return <div>Loading...</div>;
   if (error) return <div>Something went wrong!</div>;
 
@@ -179,7 +201,9 @@ const Profile = () => {
         <label htmlFor="profilePicInput">
           <img
             src={
-              profilePic }
+              profilePic ||
+              "https://i.pinimg.com/736x/64/e8/00/64e80093aa9e4e2bc3ff5aba88bc22f4.jpg"
+            }
             alt="Profile"
             className="profilePic"
           />
@@ -202,16 +226,16 @@ const Profile = () => {
                 <FacebookTwoToneIcon />
               </a>
               <a href="http://facebook.com">
-                <InstagramIcon style={{fontSize:"30px"}}  />
+                <InstagramIcon style={{ fontSize: "30px" }} />
               </a>
               <a href="http://facebook.com">
-                <TwitterIcon style={{fontSize:"30px"}} />
+                <TwitterIcon style={{ fontSize: "30px" }} />
               </a>
               <a href="http://facebook.com">
-                <LinkedInIcon style={{fontSize:"30px"}} />
+                <LinkedInIcon style={{ fontSize: "30px" }} />
               </a>
               <a href="http://facebook.com">
-                <PinterestIcon style={{fontSize:"30px"}} />
+                <PinterestIcon style={{ fontSize: "30px" }} />
               </a>
             </div>
             <div className="center">
@@ -240,7 +264,9 @@ const Profile = () => {
       </div>
 
       <div className="postsContainer">
-        <h3 style={{color: "white" , fontSize: "30px" }}>{isOwnProfile ? "Your Posts" : `${userData.full_name}'s Posts`}</h3>
+        <h3 style={{ color: "white", fontSize: "30px" }}>
+          {isOwnProfile ? "Your Posts" : `${userData.full_name}'s Posts`}
+        </h3>
         {isLoading ? (
           <p>Loading...</p>
         ) : error ? (
@@ -255,6 +281,6 @@ const Profile = () => {
       {isModalOpen && <CreatePostModal onClose={handleCloseModal} />}
     </div>
   );
-}
+};
 
 export default Profile;
