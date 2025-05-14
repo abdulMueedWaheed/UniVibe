@@ -2,6 +2,8 @@ import { useState } from "react";
 import Event from "../../components/event/Event";
 import "./events.scss";
 import { events } from "../../data/eventsData";
+import { societies } from "../../data/societiesData"; // Assuming you have a data file with society data
+
 
 const Events = () => {
     // State for search

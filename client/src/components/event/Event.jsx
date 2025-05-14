@@ -1,6 +1,13 @@
 import "./event.scss";
+import { societies } from "../../data/societiesData"; // Assuming you have a data file with society data
+
 
 const Event = ({ event }) => {
+  // Get random society name
+  const getRandomSociety = () => {
+    return societies[Math.floor(Math.random() * societies.length)]?.name || "Unknown Society";
+  };
+
   return (
     <div className="event">
       <div className="container">
@@ -9,7 +16,7 @@ const Event = ({ event }) => {
 
           <div className="event-info">
             <span className="event-name">{event.name}</span>
-            <span className="society-name">by {`Society Name`}</span>
+            <span className="society-name">by {event.society_name}</span>
           </div>
 
           <div className="desc-info">
