@@ -15,6 +15,7 @@ import { AuthContext } from "./context/AuthContext"
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import Societies from './pages/societies/Societies'
 import Explore from './pages/explore/Explore'
+import Friends from "./pages/friends/Friends"
 
 function App() {
 
@@ -75,6 +76,7 @@ function App() {
           <Route path='/events' element={<Events />} />
           <Route path='/societies' element={<Societies />} />
           <Route path='/explore' element={<Explore />} />
+          <Route path='/friends' element={<Friends />} />
         </Route>
       </Routes>
     </>

@@ -17,6 +17,7 @@ import { useContext } from "react";
 import { AuthContext } from "../../context/AuthContext";
 import { useParams } from "react-router-dom";  // Add this import
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { Link } from "react-router-dom";
 
 const Profile = () => {
   const { currentUser } = useContext(AuthContext);
@@ -63,7 +64,7 @@ const Profile = () => {
     queryKey: ["relationship", userId],
     queryFn: async () => {
       const response = await makeRequest.get("/relationships", {
-        params: { followedUserId: userId }
+        params: { followerUserId: currentUser.id }
       });
       return response.data;
     }
@@ -88,10 +89,10 @@ const Profile = () => {
     mutationFn: async (following) => {
       if (following) {
         await makeRequest.delete("/relationships", {
-          params: { userId }
+          params: { userId: profileUserId }
         });
       } else {
-        await makeRequest.post("/relationships", { userId });
+        await makeRequest.post("/relationships", { userId: profileUserId });
       }
     },
     onSuccess: () => {
@@ -103,12 +104,14 @@ const Profile = () => {
   // Determine if the profile belongs to the current user
   const isOwnProfile = currentUser?.id && (profileUserId === currentUser.id.toString());
 
+  const isFollowing = relationshipData?.includes(Number(profileUserId));
+
   const handleFollow = () => {
     if (!currentUser) {
       alert("Please log in to follow/unfollow.");
       return;
     }
-    mutation.mutate(relationshipData?.includes(currentUser.id));
+    mutation.mutate(isFollowing);
   };
 
   const handleCloseModal = () => {
@@ -146,6 +149,7 @@ const Profile = () => {
       }
     }
   };
+
 
   if (isLoading) return <div>Loading...</div>;
   if (error) return <div>Something went wrong!</div>;
@@ -221,7 +225,11 @@ const Profile = () => {
                   <span>{userData.website}</span>
                 </div>
               </div>
-              {!isOwnProfile && <button onClick={handleFollow}>{relationshipData?.includes(currentUser.id) ? "Following" : "Follow"}</button>}
+              {!isOwnProfile && (
+                <button onClick={handleFollow}>
+                  {isFollowing ? "Following" : "Follow"}
+                </button>
+              )}
             </div>
             <div className="right">
               <EmailOutlinedIcon />

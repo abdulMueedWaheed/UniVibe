@@ -1,0 +1,94 @@
+@use "../../App.scss" as *;
+
+.friends {
+  padding: 20px;
+  background-color: themed("bg");
+  min-height: calc(100vh - 70px);
+
+  .container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+
+    h2 {
+      color: themed("textColor");
+      margin-bottom: 30px;
+      font-size: 24px;
+      font-weight: 600;
+    }
+
+    .friends-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+      gap: 20px;
+
+      .friend-card {
+        background-color: themed("cardColor");
+        border-radius: 10px;
+        padding: 20px;
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+        text-decoration: none;
+        color: themed("textColor");
+        transition: transform 0.2s ease;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+
+        &:hover {
+          transform: translateY(-5px);
+        }
+
+        .friend-info {
+          display: flex;
+          align-items: center;
+          gap: 15px;
+
+          img {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            object-fit: cover;
+          }
+
+          span {
+            font-size: 16px;
+            font-weight: 500;
+          }
+        }
+
+        .view-profile {
+          background-color: #f77a13;
+          color: white;
+          border: none;
+          padding: 10px;
+          border-radius: 5px;
+          cursor: pointer;
+          font-weight: 500;
+          transition: background-color 0.2s ease;
+
+          &:hover {
+            background-color: darken(#f77a13, 10%);
+          }
+        }
+      }
+
+      .no-friends {
+        grid-column: 1 / -1;
+        text-align: center;
+        padding: 40px;
+        background-color: themed("cardColor");
+        border-radius: 10px;
+        color: themed("textColor");
+
+        h3 {
+          font-size: 20px;
+          margin-bottom: 10px;
+        }
+
+        p {
+          color: themed("textColorSoft");
+        }
+      }
+    }
+  }
+} 

@@ -29,7 +29,7 @@ const Leftbar = () => {
           </div>
           <hr></hr>
           <div className="item">
-            <Link>
+            <Link to="/friends">
               <EmojiPeopleOutlinedIcon />
               <span>Friends</span>
             </Link>
@@ -38,7 +38,7 @@ const Leftbar = () => {
             <Link to="/societies">
               <Diversity2OutlinedIcon />
               <span>Societies</span>
-            </Link>
+            </Link>        
           </div>
           <div className="item">
             <Link to="/events">
