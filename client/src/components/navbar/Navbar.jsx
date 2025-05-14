@@ -105,7 +105,7 @@ const Navbar = () => {
       <div className="left">
         <span className="logo">UniVibe</span>
         <Link to="/" style={{ textDecoration: 'none' }}>
-          <HomeOutlinedIcon sx={{ cursor: 'pointer' }} />
+          <HomeOutlinedIcon sx={{ cursor: 'pointer'}} />
         </Link>
 
         {(darkMode === false) ? 

@@ -24,6 +24,13 @@
       color: themed("logo");
     }
 
+    a {
+      text-decoration: none;
+      color: themed("textColor");
+      display: flex;
+      align-items: center;
+    }
+
     .search {
       display: flex;
       align-items: center;

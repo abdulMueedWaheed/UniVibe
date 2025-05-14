@@ -1,4 +1,5 @@
 @use "../../App.scss" as *;
+@use "sass:color";
 
 .events {
     padding: 20px;
@@ -59,7 +60,7 @@
                 background-color: themed("logo");
 
                 &:hover {
-                    background-color: adjust-hue($color: #f77a13, $degrees: -8);
+                    background-color: color.adjust(#f77a13, $alpha: -0.4);
                 }
             }
         }
