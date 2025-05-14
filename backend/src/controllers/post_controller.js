@@ -264,3 +264,282 @@ export const createPost = async (req, res) => {
         });
     }
 };
+
+export const deletePost = async (req, res) => {
+    const { post_id } = req.params;
+    // Get user_id from the authenticated token instead of request body
+    const user_id = req.user.id;
+    
+    try {
+        console.log(`Attempting to delete post ${post_id} by user ${user_id}`);
+        
+        // Check if the post exists and belongs to the user
+        const { data: existingPost, error: fetchError } = await supabase
+            .from("posts")
+            .select("user_id")
+            .eq("id", post_id)
+            .single();
+        
+        if (fetchError) {
+            console.error("Error fetching post for deletion:", fetchError);
+            return res.status(404).json({ 
+                success: false,
+                message: "Post not found", 
+                error: fetchError.message 
+            });
+        }
+        
+        if (!existingPost) {
+            return res.status(404).json({
+                success: false,
+                message: "Post not found"
+            });
+        }
+        
+        // Verify ownership of the post
+        if (existingPost.user_id !== Number(user_id)) {
+            return res.status(403).json({ 
+                success: false,
+                message: "You can only delete your own posts"
+            });
+        }
+        
+        // Delete any comments associated with the post
+        const { error: commentsError } = await supabase
+            .from("comments")
+            .delete()
+            .eq("post_id", post_id);
+        
+        if (commentsError) {
+            console.error("Error deleting comments:", commentsError);
+            // Continue with post deletion even if comment deletion fails
+        }
+        
+        // Delete any likes associated with the post
+        const { error: likesError } = await supabase
+            .from("likes")
+            .delete()
+            .eq("post_id", post_id);
+        
+        if (likesError) {
+            console.error("Error deleting likes:", likesError);
+            // Continue with post deletion even if likes deletion fails
+        }
+        
+        // Delete the post
+        const { error: deleteError } = await supabase
+            .from("posts")
+            .delete()
+            .eq("id", post_id);
+        
+        if (deleteError) {
+            console.error("Error deleting post:", deleteError);
+            return res.status(500).json({ 
+                success: false,
+                message: "Error deleting post", 
+                error: deleteError.message 
+            });
+        }
+        
+        // Return success response
+        res.status(200).json({ 
+            success: true,
+            message: "Post deleted successfully" 
+        });
+    } catch (error) {
+        console.error("Unexpected error during post deletion:", error);
+        res.status(500).json({ 
+            success: false,
+            message: "Error deleting post", 
+            error: error.message
+        });
+    }
+};
+
+export const updatePost = async (req, res) => {
+    const { post_id } = req.params;
+    const { content } = req.body;
+    const file = req.file; // From multer middleware
+    
+    // Get user ID from auth token
+    const user_id = req.user?.id;
+    
+    if (!user_id) {
+        return res.status(400).json({
+            success: false,
+            message: "User ID is required"
+        });
+    }
+
+    try {
+        console.log(`Attempting to update post ${post_id} by user ${user_id}`);
+        
+        // Check if the post exists and belongs to the user
+        const { data: existingPost, error: fetchError } = await supabase
+            .from("posts")
+            .select("*")
+            .eq("id", post_id)
+            .single();
+        
+        if (fetchError) {
+            console.error("Error fetching post for update:", fetchError);
+            return res.status(404).json({ 
+                success: false,
+                message: "Post not found", 
+                error: fetchError.message 
+            });
+        }
+        
+        if (!existingPost) {
+            return res.status(404).json({
+                success: false,
+                message: "Post not found"
+            });
+        }
+        
+        // Verify ownership of the post
+        if (existingPost.user_id !== Number(user_id)) {
+            return res.status(403).json({ 
+                success: false,
+                message: "You can only update your own posts"
+            });
+        }
+        
+        // Initialize update data with content if provided
+        const updateData = {};
+        if (content !== undefined) {
+            updateData.content = content;
+        }
+        
+        // Handle file upload if a file is provided
+        if (file) {
+            try {
+                // Generate a unique filename
+                const fileName = `posts/${uuidv4()}-${file.originalname}`;
+                
+                // Determine file type from mimetype
+                const isImage = file.mimetype.startsWith('image/');
+                const isVideo = file.mimetype.startsWith('video/');
+                
+                if (!isImage && !isVideo) {
+                    return res.status(400).json({
+                        success: false,
+                        message: "Only image and video files are allowed"
+                    });
+                }
+                
+                // Upload file to Supabase Storage
+                const { error: uploadError } = await supabase.storage
+                    .from("user-uploads")
+                    .upload(fileName, file.buffer, {
+                        contentType: file.mimetype,
+                        cacheControl: '3600'
+                    });
+                
+                if (uploadError) {
+                    throw uploadError;
+                }
+                
+                // Get the public URL
+                const { data: urlData } = supabase.storage
+                    .from("user-uploads")
+                    .getPublicUrl(fileName);
+                
+                const publicUrl = urlData.publicUrl;
+                
+                console.log("Media uploaded successfully, URL:", publicUrl);
+                
+                // Remove old media file if it exists
+                if (isImage) {
+                    updateData.image_url = publicUrl;
+                    updateData.video_url = null; // Clear video if switching to image
+                    
+                    // Delete old image if exists
+                    if (existingPost.image_url) {
+                        try {
+                            const oldPath = existingPost.image_url.split('/').pop();
+                            await supabase.storage
+                                .from("user-uploads")
+                                .remove([`posts/${oldPath}`]);
+                        } catch (removeError) {
+                            console.warn("Failed to remove old image:", removeError);
+                            // Continue anyway - this is not critical
+                        }
+                    }
+                } 
+                else if (isVideo) {
+                    updateData.video_url = publicUrl;
+                    updateData.image_url = null; // Clear image if switching to video
+                    
+                    // Delete old video if exists
+                    if (existingPost.video_url) {
+                        try {
+                            const oldPath = existingPost.video_url.split('/').pop();
+                            await supabase.storage
+                                .from("user-uploads")
+                                .remove([`posts/${oldPath}`]);
+                        } catch (removeError) {
+                            console.warn("Failed to remove old video:", removeError);
+                            // Continue anyway - this is not critical
+                        }
+                    }
+                }
+            } 
+            catch (fileError) {
+                console.error("Error handling file upload:", fileError);
+                return res.status(500).json({
+                    success: false,
+                    message: "Error uploading file",
+                    error: fileError.message
+                });
+            }
+        }
+        
+        // If no update data was provided, return an error
+        if (Object.keys(updateData).length === 0) {
+            return res.status(400).json({
+                success: false,
+                message: "No update data provided"
+            });
+        }
+        
+        // Update the post in the database
+        const { data: updatedPost, error: updateError } = await supabase
+            .from("posts")
+            .update(updateData)
+            .eq("id", post_id)
+            .select(`
+                *,
+                users:user_id (
+                    id,
+                    full_name,
+                    profile_pic
+                ),
+                comments:comments(count)
+            `);
+        
+        if (updateError) {
+            console.error("Error updating post:", updateError);
+            return res.status(500).json({ 
+                success: false,
+                message: "Error updating post", 
+                error: updateError.message 
+            });
+        }
+        
+        // Return success with updated post data
+        return res.status(200).json({ 
+            success: true,
+            message: "Post updated successfully",
+            data: updatedPost[0]
+        });
+    } 
+    catch (error) {
+        console.error("Unexpected error during post update:", error);
+        return res.status(500).json({ 
+            success: false,
+            message: "Error updating post", 
+            error: error.message 
+        });
+    }
+};
