@@ -95,12 +95,21 @@
             gap: 0.2rem;
 
             button {
-              padding: 2px 4px;
+              padding: 2px 6px;
               border: none;
               color: themed("textColor");
               cursor: pointer;
-              font-weight: 300;
+              font-weight: 500;
               border-radius: 5px;
+
+              &.subscribed {
+                background-color: themed("bgSoft");
+                color: themed("textColorSoft");
+                
+                &:hover {
+                  background-color: #ddd;
+                }
+              }
 
               &:first-child {
                 background-color: #f77a13;
