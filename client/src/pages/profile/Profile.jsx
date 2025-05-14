@@ -16,23 +16,12 @@ import { makeRequest } from "../../axios.js";
 import { useContext } from "react";
 import { AuthContext } from "../../context/AuthContext";
 import { useParams } from "react-router-dom";  // Add this import
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 const Profile = () => {
   const { currentUser } = useContext(AuthContext);
-  const { userId } = useParams();  // Get userId from URL params
-
-  console.log("Raw userId from URL:", userId);
-  console.log("Raw currentUser.id:", currentUser?.id);
-  
-  // Use the URL userId if available, otherwise use currentUser.id (for own profile)
-  const profileUserId = userId || currentUser?.id?.toString();
-
-  console.log("Final profileUserId:", profileUserId, "Type:", typeof profileUserId);
-
-  console.log("URL userId:", userId);
-  console.log("currentUser.id:", currentUser?.id);
-  console.log("profileUserId:", profileUserId);
-  
+  const { userId } = useParams();
+  const queryClient = useQueryClient();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [coverPic, setCoverPic] = useState("");
   const [profilePic, setProfilePic] = useState("");
@@ -41,16 +30,16 @@ const Profile = () => {
     location: "Location not set",
     website: "Website not set"
   });
-  
+
+  // Use the URL userId if available, otherwise use currentUser.id
+  const profileUserId = userId || currentUser?.id?.toString();
+
   // Fetch profile user data
   useEffect(() => {
     const fetchUserData = async () => {
       if (profileUserId) {
         try {
-          console.log("Fetching user data for ID:", profileUserId);
           const res = await makeRequest.get(`/users/${profileUserId}`);
-          console.log("User data response:", res.data);
-          
           if (res.data && res.data.data) {
             const user = res.data.data;
             setUserData({
@@ -61,19 +50,65 @@ const Profile = () => {
             setCoverPic(user.cover_pic || "");
             setProfilePic(user.profile_pic || "");
           }
-        }
-        
-        catch (error) {
+        } catch (error) {
           console.error("Error fetching user data:", error);
         }
       }
     };
-
     fetchUserData();
   }, [profileUserId]);
 
-  const handleOpenModal = () => {
-    setIsModalOpen(true);
+  // Follow/Unfollow functionality
+  const { data: relationshipData } = useQuery({
+    queryKey: ["relationship", userId],
+    queryFn: async () => {
+      const response = await makeRequest.get("/relationships", {
+        params: { followedUserId: userId }
+      });
+      return response.data;
+    }
+  });
+
+  // Fetch the user's posts
+  const { isLoading, error, data: posts } = useQuery({
+    queryKey: ["userPosts", profileUserId],
+    queryFn: async () => {
+      try {
+        const res = await makeRequest.get(`/posts/${profileUserId}`);
+        return res.data.data || [];
+      } catch (err) {
+        console.error("Error fetching posts:", err);
+        throw err;
+      }
+    },
+    enabled: !!profileUserId,
+  });
+
+  const mutation = useMutation({
+    mutationFn: async (following) => {
+      if (following) {
+        await makeRequest.delete("/relationships", {
+          params: { userId }
+        });
+      } else {
+        await makeRequest.post("/relationships", { userId });
+      }
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries(["relationship"]);
+    }
+  });
+  console.log("relationshipData from profile.jsx line 102", {userId, currentUser});
+
+  // Determine if the profile belongs to the current user
+  const isOwnProfile = currentUser?.id && (profileUserId === currentUser.id.toString());
+
+  const handleFollow = () => {
+    if (!currentUser) {
+      alert("Please log in to follow/unfollow.");
+      return;
+    }
+    mutation.mutate(relationshipData?.includes(currentUser.id));
   };
 
   const handleCloseModal = () => {
@@ -90,9 +125,7 @@ const Profile = () => {
       try {
         const res = await makeRequest.post("/users/update-cover-pic", formData);
         setCoverPic(res.data.cover_pic);
-      }
-      
-      catch (error) {
+      } catch (error) {
         console.error("Error updating cover picture:", error);
       }
     }
@@ -100,49 +133,22 @@ const Profile = () => {
 
   const handleProfilePicChange = async (e) => {
     const file = e.target.files[0];
-  if (file) {
-    const formData = new FormData();
-    formData.append("file", file);
-    formData.append("user_id", currentUser.id);
+    if (file) {
+      const formData = new FormData();
+      formData.append("file", file);
+      formData.append("user_id", currentUser.id);
 
-    try {
-      const res = await makeRequest.post(
-        "/users/update-profile-pic",
-        formData
-      );
-      // Add this line to update the profile pic state
-      setProfilePic(res.data.profile_pic); 
-      console.log("Profile pic updated:", res.data.profile_pic);
+      try {
+        const res = await makeRequest.post("/users/update-profile-pic", formData);
+        setProfilePic(res.data.profile_pic);
+      } catch (error) {
+        console.error("Error updating profile picture:", error);
+      }
     }
-    
-    catch (error) {
-      console.error("Error updating profile picture:", error);
-    }
-  }
   };
 
-  // Fetch the user's posts
-  const { isLoading, error, data: posts } = useQuery({
-    queryKey: ["userPosts", profileUserId],
-    queryFn: async () => {
-      try {
-        console.log(`Fetching posts for user ID: ${profileUserId}`);
-        const res = await makeRequest.get(`/posts/${profileUserId}`);
-        console.log("Posts response:", res.data);
-        return res.data.data || [];
-      } catch (err) {
-        console.error("Error fetching posts:", err);
-        throw err;
-      }
-    },
-    enabled: !!profileUserId,
-  });
-  
-  // Determine if the profile belongs to the current user
-  const isOwnProfile = currentUser?.id && 
-    (profileUserId === currentUser.id.toString());
-
-  console.log("Is own profile?", isOwnProfile);
+  if (isLoading) return <div>Loading...</div>;
+  if (error) return <div>Something went wrong!</div>;
 
   return (
     <div className="profile">
@@ -215,7 +221,7 @@ const Profile = () => {
                   <span>{userData.website}</span>
                 </div>
               </div>
-              {!isOwnProfile && <button>follow</button>}
+              {!isOwnProfile && <button onClick={handleFollow}>{relationshipData?.includes(currentUser.id) ? "Following" : "Follow"}</button>}
             </div>
             <div className="right">
               <EmailOutlinedIcon />
@@ -226,7 +232,7 @@ const Profile = () => {
       </div>
 
       <div className="postsContainer">
-        <h3>{isOwnProfile ? "Your Posts" : `${userData.full_name}'s Posts`}</h3>
+        <h3 style={{color: "white" , fontSize: "30px" }}>{isOwnProfile ? "Your Posts" : `${userData.full_name}'s Posts`}</h3>
         {isLoading ? (
           <p>Loading...</p>
         ) : error ? (
