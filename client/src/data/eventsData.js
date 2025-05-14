@@ -1,0 +1,122 @@
+export const events = [
+    {
+        id: 1,
+        img: "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3",
+        name: "Super Cool Hackathon",
+        description: "Are you ready to shine? Join the sooper cool hackathon and win amazing prizes.",
+        timing: "May/15/2025",
+        location: "SEECS Seminar Hall",
+        category: "Tech",
+        society_id: 1,
+        tags: ["coding", "hackathon", "prizes"],
+        registration_deadline: "May 10, 2025"
+    },
+    {
+        id: 2,
+        img: "https://images.pexels.com/photos/1036804/pexels-photo-1036804.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
+        name: "Arts & Culture Exhibition",
+        description: "Explore the artistic talents of our university community. Various art forms including paintings, sculptures, and photography will be on display.",
+        timing: "May/20/2025",
+        location: "CIPS",
+        category: "Art",
+        society_id: 2,
+        tags: ["exhibition", "art", "culture"],
+        registration_deadline: "May 18, 2025"
+    },
+    {
+        id: 3,
+        img: "https://images.unsplash.com/photo-1523240795612-9a054b0db644?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3",
+        name: "Annual Sports Gala",
+        description: "The biggest sporting event of the year! Compete in various sports and represent your department.",
+        timing: "June/05/2025",
+        location: "Sports Complex",
+        category: "Sports",
+        society_id: 3,
+        tags: ["sports", "competition", "departments"],
+        registration_deadline: "May 25, 2025"
+    },
+    {
+        id: 4,
+        img: "https://images.pexels.com/photos/167636/pexels-photo-167636.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
+        name: "Music Festival",
+        description: "A night of musical performances by student bands and solo artists. Come enjoy the rhythm and melodies!",
+        timing: "June/15/2025",
+        location: "NBS Ground",
+        category: "Music",
+        society_id: 4,
+        tags: ["music", "bands", "performances"],
+        registration_deadline: "June 10, 2025"
+    },
+    {
+        id: 5,
+        img: "https://images.unsplash.com/photo-1552664730-d307ca884978?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3",
+        name: "Entrepreneurship Workshop",
+        description: "Learn from successful entrepreneurs and gain insights into starting your own business venture.",
+        timing: "June/22/2025",
+        location: "NBS Auditorium",
+        category: "Business",
+        society_id: 5,
+        tags: ["entrepreneurship", "business", "workshop"],
+        registration_deadline: "June 15, 2025"
+    },
+    {
+        id: 6,
+        img: "https://images.pexels.com/photos/6050429/pexels-photo-6050429.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
+        name: "Robotics Competition",
+        description: "Showcase your robotics skills and compete with teams from other universities for amazing prizes.",
+        timing: "July/05/2025",
+        location: "SEECS Robotics Lab",
+        category: "Tech",
+        society_id: 1,
+        tags: ["robotics", "engineering", "competition"],
+        registration_deadline: "June 25, 2025"
+    },
+    {
+        id: 7,
+        img: "https://images.unsplash.com/photo-1507842217343-583bb7275b66?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3",
+        name: "Literary Festival",
+        description: "A celebration of literature with book launches, poetry readings, and discussions with renowned authors.",
+        timing: "July/15/2025",
+        location: "Central Library",
+        category: "Literature",
+        society_id: 6,
+        tags: ["literature", "poetry", "books"],
+        registration_deadline: "July 10, 2025"
+    },
+    {
+        id: 8,
+        img: "https://images.pexels.com/photos/6646917/pexels-photo-6646917.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
+        name: "Community Service Day",
+        description: "Join hands to give back to the community. Various community service activities will be organized around the city.",
+        timing: "July/25/2025",
+        location: "Multiple Locations",
+        category: "Community",
+        society_id: 7,
+        tags: ["community", "service", "volunteer"],
+        registration_deadline: "July 20, 2025"
+    },
+    {
+        id: 9,
+        img: "https://images.unsplash.com/photo-1503676260728-332c239b682c?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3",
+        name: "Photography Contest",
+        description: "Capture moments and tell stories through your lens. Theme: 'Urban Life'.",
+        timing: "August/05/2025",
+        location: "Media Department",
+        category: "Art",
+        society_id: 2,
+        tags: ["photography", "contest", "urban"],
+        registration_deadline: "July 30, 2025"
+    },
+    {
+        id: 10,
+        img: "https://images.pexels.com/photos/5554303/pexels-photo-5554303.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
+        name: "Science Fair",
+        description: "Showcase your scientific research and innovations. Open to all departments.",
+        timing: "August/15/2025",
+        location: "SEECS Lobby",
+        category: "Science",
+        society_id: 8,
+        tags: ["science", "research", "innovation"],
+        registration_deadline: "August 10, 2025"
+    }
+];
