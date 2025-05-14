@@ -9,36 +9,81 @@ const Share = () => {
     const [content, setContent] = useState("");
     const [image, setImage] = useState(null);
     const [video, setVideo] = useState(null);
-
     const [profilePic, setProfilePic] = useState("");
+    const [notification, setNotification] = useState({ show: false, message: "", type: "" });
 
     const { currentUser } = useContext(AuthContext);
 
-    // Updated useMutation syntax to match the expected format
+    // Updated useMutation with success handling and form reset
     const mutation = useMutation({
         mutationFn: (newPost) => {
-            // When using FormData, we need to make sure headers are not manually set
-            // because the browser needs to set the correct Content-Type with boundary
-            return makeRequest.post("/posts", newPost, {
-                headers: {
-                    // Don't set Content-Type here, let the browser set it with the correct boundary
-                    // when sending multipart/form-data
-                }
-            });
+            return makeRequest.post("/posts", newPost);
         },
         onSuccess: () => {
-            queryClient.invalidateQueries(["posts"]); // Refresh the posts list
+            // Refresh the posts list
+            queryClient.invalidateQueries(["posts"]);
+            
+            // Show success notification
+            setNotification({
+                show: true,
+                message: "Post created successfully!",
+                type: "success"
+            });
+            
+            // Clear form fields
+            setContent("");
+            setImage(null);
+            setVideo(null);
+            
+            // Hide notification after 3 seconds
+            setTimeout(() => {
+                setNotification({ show: false, message: "", type: "" });
+            }, 3000);
         },
         onError: (error) => {
             console.error("Error creating post:", error);
+            
+            // Show error notification
+            setNotification({
+                show: true,
+                message: "Failed to create post. Please try again.",
+                type: "error"
+            });
+            
+            // Hide notification after 3 seconds
+            setTimeout(() => {
+                setNotification({ show: false, message: "", type: "" });
+            }, 3000);
         },
     });
 
     const handleSubmit = (e) => {
         e.preventDefault();
 
+        // Validate form input
+        if (!content.trim()) {
+            setNotification({
+                show: true,
+                message: "Please enter some content for your post",
+                type: "error"
+            });
+            
+            setTimeout(() => {
+                setNotification({ show: false, message: "", type: "" });
+            }, 3000);
+            return;
+        }
+
         if (image && video) {
-            alert("You can only upload an image or a video, not both.");
+            setNotification({
+                show: true,
+                message: "You can only upload an image or a video, not both.",
+                type: "error"
+            });
+            
+            setTimeout(() => {
+                setNotification({ show: false, message: "", type: "" });
+            }, 3000);
             return;
         }
 
@@ -52,15 +97,8 @@ const Share = () => {
         // Append file if it exists
         if (image) {
             formData.append("file", image);
-            console.log("Appending image file:", image.name);
         } else if (video) {
             formData.append("file", video);
-            console.log("Appending video file:", video.name);
-        }
-
-        // Check if formData contains what you expect
-        for (let pair of formData.entries()) {
-            console.log(pair[0] + ': ' + pair[1]);
         }
 
         // Update the mutation function
@@ -70,10 +108,8 @@ const Share = () => {
     useEffect(() => {
         const fetchProfilePic = async () => {
             try {
-                console.log("Fetching user data for ID:", currentUser.id);
                 const res = await makeRequest.get(`/users/${currentUser.id}`);
-                console.log("User data response:", res.data);
-
+                
                 if (res.data && res.data.data) {
                     const user = res.data.data;
                     setProfilePic(user.profile_pic || "");
@@ -85,10 +121,16 @@ const Share = () => {
         };
 
         fetchProfilePic();
-    }, [])
+    }, [currentUser.id]);
 
     return (
         <div className="share">
+            {notification.show && (
+                <div className={`notification ${notification.type}`}>
+                    {notification.message}
+                </div>
+            )}
+            
             <div className="container">
                 <div className="top">
                     <div className="left">
@@ -102,10 +144,29 @@ const Share = () => {
                     </div>
                     <div className="right">
                         {image && (
-                            <img className="file" alt="" src={URL.createObjectURL(image)} />
+                            <div className="file-preview">
+                                <img className="file" alt="" src={URL.createObjectURL(image)} />
+                                <button 
+                                    className="remove-file" 
+                                    onClick={() => setImage(null)}
+                                >
+                                    ✕
+                                </button>
+                            </div>
                         )}
                         {video && (
-                            <img className="file" alt="" src={URL.createObjectURL(image)} />
+                            <div className="file-preview">
+                                <video className="file" controls>
+                                    <source src={URL.createObjectURL(video)} type="video/mp4" />
+                                    Your browser does not support video playback.
+                                </video>
+                                <button 
+                                    className="remove-file" 
+                                    onClick={() => setVideo(null)}
+                                >
+                                    ✕
+                                </button>
+                            </div>
                         )}
                     </div>
                 </div>
@@ -116,14 +177,25 @@ const Share = () => {
                             type="file"
                             id="file"
                             style={{ display: "none" }}
-                            onChange={(e) => setImage(e.target.files[0])}
+                            onChange={(e) => {
+                                if (e.target.files[0]) {
+                                    setImage(e.target.files[0]);
+                                    setVideo(null); // Clear video if image is selected
+                                }
+                            }}
+                            accept="image/*"
                         />
                         <input
                             type="file"
                             accept="video/*"
                             id="video"
                             style={{display: "none"}}
-                            onChange={(e) => setVideo(e.target.files[0])}
+                            onChange={(e) => {
+                                if (e.target.files[0]) {
+                                    setVideo(e.target.files[0]);
+                                    setImage(null); // Clear image if video is selected
+                                }
+                            }}
                         />
                         <label htmlFor="file">
                             <div className="item">
@@ -137,7 +209,12 @@ const Share = () => {
                         </label>
                     </div>
                     <div className="right">
-                        <button onClick={handleSubmit}>Share</button>
+                        <button 
+                            onClick={handleSubmit}
+                            disabled={mutation.isLoading}
+                        >
+                            {mutation.isLoading ? "Sharing..." : "Share"}
+                        </button>
                     </div>
                 </div>
             </div>
