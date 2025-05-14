@@ -2,7 +2,7 @@ export const events = [
     {
         id: 1,
         img: "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3",
-        name: "Super Cool Hackathon",
+        name: "Hackathon",
         description: "Are you ready to shine? Join the sooper cool hackathon and win amazing prizes.",
         timing: "May/15/2025",
         location: "SEECS Seminar Hall",
@@ -14,7 +14,7 @@ export const events = [
     {
         id: 2,
         img: "https://images.pexels.com/photos/1036804/pexels-photo-1036804.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
-        name: "Arts & Culture Exhibition",
+        name: "Arts Exhibition",
         description: "Explore the artistic talents of our university community. Various art forms including paintings, sculptures, and photography will be on display.",
         timing: "May/20/2025",
         location: "CIPS",
@@ -26,7 +26,7 @@ export const events = [
     {
         id: 3,
         img: "https://images.unsplash.com/photo-1523240795612-9a054b0db644?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3",
-        name: "Annual Sports Gala",
+        name: "Sports Gala",
         description: "The biggest sporting event of the year! Compete in various sports and represent your department.",
         timing: "June/05/2025",
         location: "Sports Complex",
