@@ -43,8 +43,8 @@ const Profile = () => {
             const user = res.data.data;
             setUserData({
               full_name: user.full_name || "User",
-              location: user.location || "Location not set",
-              website: user.website || "Website not set",
+              location: user.location || "Location",
+              website: user.website || "Website URL",
             });
             setCoverPic(user.cover_pic || "");
             setProfilePic(user.profile_pic || "");
