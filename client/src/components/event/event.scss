@@ -15,12 +15,13 @@
     .container {
         display: flex;
         overflow: hidden;
+        max-height: 300px;
 
         img {
             border-radius: 20px;
             object-fit: contain;
             width: 35%;
-            height: 100%;
+            overflow: hidden;
 
             @media screen and (max-width: 786px) {
                 width: 100%;
