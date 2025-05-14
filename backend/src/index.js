@@ -9,6 +9,7 @@ import postRoutes from './routes/post_routes.js';
 import societyRoutes from './routes/society_routes.js';
 import commentRoutes from './routes/comment_routes.js';
 import likeRoutes from "./routes/like_routes.js";
+import relationshipRoutes from "./routes/relationships.js";
 
 dotenv.config();
 const app = express();
@@ -20,7 +21,7 @@ app.use((req, res, next) => {
 });
 app.use(express.json());
 app.use(cors({
-		origin:"http://localhost:5174",
+		origin:"http://localhost:5173",
 		credentials: true // Allow cookies to be sent with requests
 	}
 ));
@@ -32,6 +33,7 @@ app.use('/api/posts', postRoutes);
 app.use('/api/societies', societyRoutes);
 app.use('/api/comments', commentRoutes);
 app.use('/api/likes', likeRoutes);
+app.use('/api/relationships', relationshipRoutes);
 
 app.get('/', (req, res) => res.send('Backend is running!'));
 
