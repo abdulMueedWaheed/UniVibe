@@ -14,7 +14,6 @@ import relationshipRoutes from "./routes/relationships.js";
 dotenv.config();
 const app = express();
 
-
 app.use((req, res, next) => {
 	res.header("Access-Control-Allow-Origin", true);
 	next();
@@ -22,9 +21,10 @@ app.use((req, res, next) => {
 app.use(express.json());
 app.use(cors({
 		origin:"http://localhost:5173",
-		credentials: true // Allow cookies to be sent with requests
+		credentials: true 
 	}
 ));
+
 app.use(cookieParser());
 
 app.use('/api/users', userRoutes);
