@@ -25,6 +25,13 @@ app.use(cors({
 	}
 ));
 
+app.use(cors({
+	origin:"https://univibe-qien.onrender.com",
+	credentials: true 
+}
+));
+
+
 app.use(cookieParser());
 
 app.use('/api/users', userRoutes);
