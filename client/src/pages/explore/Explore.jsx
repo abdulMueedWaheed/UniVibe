@@ -12,7 +12,9 @@ const Explore = () => {
             try {
                 const res = await makeRequest.get('/posts');
                 console.log("Explore posts response:", res.data.data);
-                return res.data.data || [];
+                // Shuffle the posts array
+                const shuffledPosts = [...(res.data.data || [])].sort(() => Math.random() - 0.5);
+                return shuffledPosts;
             } catch (err) {
                 console.error("Error fetching posts:", err);
                 throw err;
@@ -23,7 +25,7 @@ const Explore = () => {
     return (
         <div className="explore">
             <div className="container">
-                <h1>Explore</h1>
+                <h1>Posts & Reels</h1>
                 <div className='idk'>
                 {isLoading ? (
                     <div className="loading">Loading posts...</div>

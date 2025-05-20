@@ -18,7 +18,12 @@ const Home = () => {
     data: allPosts 
   } = useQuery({
     queryKey: ['allPosts'],
-    queryFn: () => makeRequest.get("/posts").then(res => res.data),
+    queryFn: async () => {
+      const res = await makeRequest.get("/posts");
+      // Shuffle the posts array
+      const shuffledPosts = [...(res.data.data || [])].sort(() => Math.random() - 0.5);
+      return { ...res.data, data: shuffledPosts };
+    },
     refetchOnWindowFocus: false,
   });
 
@@ -29,7 +34,12 @@ const Home = () => {
     data: followedPosts 
   } = useQuery({
     queryKey: ['followedPosts', currentUser?.id],
-    queryFn: () => makeRequest.get(`/posts/followed/${currentUser?.id}`).then(res => res.data),
+    queryFn: async () => {
+      const res = await makeRequest.get(`/posts/followed/${currentUser?.id}`);
+      // Shuffle the posts array
+      const shuffledPosts = [...(res.data.data || [])].sort(() => Math.random() - 0.5);
+      return { ...res.data, data: shuffledPosts };
+    },
     refetchOnWindowFocus: false,
     enabled: !!currentUser?.id // Only run if we have a user ID
   });

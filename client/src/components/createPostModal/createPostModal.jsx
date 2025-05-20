@@ -8,7 +8,7 @@ const CreatePostModal = ({ onClose }) => {
   const [content, setContent] = useState("");
   const [image, setImage] = useState(null);
   const [video, setVideo] = useState(null);
-  const {currentUser} = useContext(AuthContext);
+  const { currentUser } = useContext(AuthContext);
 
   const queryClient = useQueryClient();
 
@@ -20,7 +20,7 @@ const CreatePostModal = ({ onClose }) => {
         headers: {
           // Don't set Content-Type here, let the browser set it with the correct boundary
           // when sending multipart/form-data
-        }
+        },
       });
     },
     onSuccess: () => {
@@ -42,11 +42,11 @@ const CreatePostModal = ({ onClose }) => {
 
     // Create a FormData object to send files
     const formData = new FormData();
-    
+
     // Append text data
     formData.append("user_id", currentUser.id);
     formData.append("content", content);
-    
+
     // Append file if it exists
     if (image) {
       formData.append("file", image);
@@ -58,7 +58,7 @@ const CreatePostModal = ({ onClose }) => {
 
     // Check if formData contains what you expect
     for (let pair of formData.entries()) {
-      console.log(pair[0] + ': ' + pair[1]);
+      console.log(pair[0] + ": " + pair[1]);
     }
 
     // Update the mutation function
@@ -76,6 +76,12 @@ const CreatePostModal = ({ onClose }) => {
             placeholder="What's on your mind?"
             value={content}
             onChange={(e) => setContent(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === "Enter" && !e.shiftKey) {
+                e.preventDefault();
+                handleSubmit(e);
+              }
+            }}
           />
           <input
             type="file"
