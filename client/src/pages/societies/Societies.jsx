@@ -9,7 +9,7 @@ const Societies = () => {
   const [category, setCategory] = useState("all");
 
   // TEMPORARY DATA
-  const categories = ["all", "academic", "cultural", "technical", "sports", "arts", "community", "entrepreneurship"];
+  const categories = ["all", "academic", "cultural", "technical", "sports", "art", "community", "entrepreneurship"];
   
   
 
@@ -47,7 +47,7 @@ const Societies = () => {
               society.description.toLowerCase().includes(search.toLowerCase())
             ))
             .filter(society => (
-              category === "all" || society.category === category
+              category === "all" || society.category.toLowerCase() === category.toLowerCase()
             ))
             .map(society => (
               <SocietyCard key={society.id} society={society} />
